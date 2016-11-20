@@ -1,0 +1,42 @@
+{
+  "name": "fist",
+  "version": "1.0.0",
+  "description": "firebase list",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server -d --watch --devtool --inline --hot --content-base ./app/build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhanglun/fist.git"
+  },
+  "keywords": [
+    "firebase"
+  ],
+  "author": "zhanglun1410@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhanglun/fist/issues"
+  },
+  "homepage": "https://github.com/zhanglun/fist#readme",
+  "dependencies": {
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.26.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-util": "^3.0.7",
+    "html-webpack-plugin": "^2.24.1",
+    "less-loader": "^2.2.3",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.3"
+  }
+}
