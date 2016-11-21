@@ -56,16 +56,10 @@ module.exports = {
   },
   externals: {},
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"development"',
-      }
-    }),
     // new ExtractTextPlugin('style.bundle.css'),
     new HtmlWebpackPlugin({
       template: SRC_PATH + '/index.html',
       filename: BUILD_PATH + '/index.html',
-      cache: false,
     }),
     // new CopyWebpackPlugin([{
     //   from: SRC_PATH + '/vendor',
