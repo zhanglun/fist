@@ -8,8 +8,7 @@ import AppComponent from './components/app';
 
 import './auth/github';
 
-
-// render(<AppComponent />, document.getElementById('app'));
+render(<AppComponent />, document.getElementById('app'));
 
 
 window.firebase = firebase;

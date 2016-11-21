@@ -13,36 +13,18 @@ firebase.initializeApp(config);
 let provider = new firebase.auth.GithubAuthProvider();
 provider.addScope('user');
 provider.setCustomParameters({
-  'allow_signup': 'false'
+  'allow_signup': 'true'
 });
 
 
 window.onload = function () {
 
-  // const inputEmail = document.getElementById('email');
-  // const inputPassword = document.getElementById('password');
-  const btnSignUp = document.getElementById('btnSignUp');
   const btnGithub = document.getElementById('btnGithub');
 
-  btnSignUp.addEventListener('click', e => {
-    // const email = inputEmail.value;
-    // const pass = inputPassword.value;
-    let email = '549936800@qq.com';
-    let password = 'smile1410_happy';
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(function () {
-        console.log(arguments);
-      }).catch(function (error) {
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      console.log(error);
-    });
-
-  });
-
-  firebase.auth().onAuthStateChanged(firebaseUser => {
-    if (firebaseUser) {
-      console.log(firebaseUser);
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log(user);
+      window.currentUser = user;
     } else {
       console.log('not logged in');
     }
@@ -50,13 +32,11 @@ window.onload = function () {
   btnGithub.addEventListener('click', (e) => {
     firebase.auth().signInWithPopup(provider).then(function (result) {
       // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-      var token = result.credential.accessToken;
+      let token = result.credential.accessToken;
       // The signed-in user info.
-      var user = result.user;
-      debugger;
-      // ...
+      let user = result.user;
+      window.currentUser = result.user;
     }).catch(function (error) {
-      debugger;
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
