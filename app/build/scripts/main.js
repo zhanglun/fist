@@ -136,7 +136,6 @@ function createPostElement(postId, title, text, author, authorId, authorPic) {
   postElement.getElementsByClassName('username')[0].innerText = author || 'Anonymous';
   postElement.getElementsByClassName('avatar')[0].style.backgroundImage = 'url("' +
       (authorPic || './silhouette.jpg') + '")';
-
   // Listen for comments.
   // [START child_event_listener_recycler]
   var commentsRef = firebase.database().ref('post-comments/' + postId);

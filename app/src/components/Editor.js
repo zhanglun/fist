@@ -31,6 +31,7 @@ export default class EditorComponent extends Component {
       title: this.state.title,
       content: this.state.content
     });
+    
   }
 
   render() {

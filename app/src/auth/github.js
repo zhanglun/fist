@@ -17,18 +17,11 @@ provider.setCustomParameters({
 });
 
 
+
+
 window.onload = function () {
 
   const btnGithub = document.getElementById('btnGithub');
-
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      console.log(user);
-      window.currentUser = user;
-    } else {
-      console.log('not logged in');
-    }
-  });
   btnGithub.addEventListener('click', (e) => {
     firebase.auth().signInWithPopup(provider).then(function (result) {
       // This gives you a GitHub Access Token. You can use it to access the GitHub API.
