@@ -1,13 +1,14 @@
 import firebase from 'firebase';
 
-export function add(userid, user, note) {
-  console.log(firebase.auth().currentUser);
+export function add(userid, note) {
   let { title, content } = Object.assign({}, note);
   // A post entry.
   let postData = {
-    author: userid,
     content,
     title,
+    author_id: userid,
+    create_time: new Date(),
+    update_time: new Date(),
   };
 
   // Get a key for a new Post.
@@ -21,7 +22,3 @@ export function add(userid, user, note) {
   return firebase.database().ref().update(updates);
 }
 
-
-export function getAll(userid,) {
-
-}

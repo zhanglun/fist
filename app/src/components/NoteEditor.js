@@ -27,7 +27,7 @@ export default class EditorComponent extends Component {
 
   save() {
     console.log(Note);
-    Note.add(window.currentUser.uid, window.currentUser, {
+    Note.add(window.currentUser.uid, {
       title: this.state.title,
       content: this.state.content
     });
