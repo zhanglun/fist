@@ -19,12 +19,38 @@ export default class App extends Component {
       if (user) {
         console.log(user);
         window.currentUser = user;
+        this.setState({ loading: false });
       } else {
+        this.setState({ loading: true });
         console.log('not logged in');
       }
-      this.setState({ loading: false });
     });
   }
+
+  signIn() {
+    let provider = new firebase.auth.GithubAuthProvider();
+    provider.addScope('user');
+    provider.setCustomParameters({
+      'allow_signup': 'true'
+    });
+    firebase.auth().signInWithPopup(provider).then(function (result) {
+      // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+      let token = result.credential.accessToken;
+      // The signed-in user info.
+      let user = result.user;
+      window.currentUser = result.user;
+    }).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  }
+
 
   initApp() {
     let { loading } = this.state;
@@ -32,6 +58,7 @@ export default class App extends Component {
       return (
         <div>
           <p>Loading...</p>
+          <button onClick={this.signIn.bind(this)}>sign in with github</button>
         </div>
       )
     } else {
@@ -40,9 +67,9 @@ export default class App extends Component {
           <HeaderComponent />
           <div className="app-container">
             <NoteListComponent />
-              <div className="note-detail">
-                <NoteEditorComponent />
-              </div>
+            <div className="note-detail">
+              <NoteEditorComponent />
+            </div>
           </div>
         </div>
       )

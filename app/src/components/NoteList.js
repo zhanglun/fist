@@ -17,7 +17,6 @@ export default class NoteList extends Component {
       NoteRef.on('value', function (snapshot) {
         console.log(snapshot.val());
 
-        // updateStarCount(postElement, snapshot.val());
       });
       NoteRef.on('child_added', (data) => {
         console.log('child_added', data.val());
