@@ -14,7 +14,7 @@ var BUILD_PATH = path.resolve(APP_PATH, 'build');
 
 module.exports = {
   entry: {
-    'app': SRC_PATH + '/index.js',
+    'app': [SRC_PATH + '/index.js'],
   },
   output: {
     path: BUILD_PATH,
@@ -26,6 +26,7 @@ module.exports = {
     alias: {
       sweetalert: 'node_modules/sweetalert/lib/sweetalert.js',
       sweetalertcss: 'node_modules/sweetalert/dist/sweetalert.css',
+      codemirrorcss: 'node_modules/codemirror/lib/codemirror.css',
     },
     extensions: ['', '.js', '.jsx', '.css']
   },
@@ -54,13 +55,23 @@ module.exports = {
       }
     ],
   },
-  externals: {},
+  externals: {
+  },
+  devServer: {
+    hot: true,
+    port: 1000,
+    inline: true,
+    stats: {
+      colors: true
+    }
+  },
   plugins: [
     // new ExtractTextPlugin('style.bundle.css'),
     new HtmlWebpackPlugin({
       template: SRC_PATH + '/index.html',
       filename: BUILD_PATH + '/index.html',
     }),
+    new webpack.HotModuleReplacementPlugin(),
     // new CopyWebpackPlugin([{
     //   from: SRC_PATH + '/vendor',
     //   to: BUILD_PATH + '/vendor',

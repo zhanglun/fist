@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var babel = require("gulp-babel");
 var gutil = require('gulp-util');
 var webpack = require('webpack');
+var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require('./webpack.config.js');
 
 var ROOT_PATH = path.resolve(__dirname);
@@ -34,5 +35,18 @@ gulp.task('watch', ['webpack:build-dev'], function () {
   gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:build-dev']);
 });
 
+gulp.task('devserver', function() {
+
+  webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:1000/", "webpack/hot/dev-server");
+  var compiler = webpack(webpackConfig);
+  var server = new WebpackDevServer(compiler, {
+    hot: true,
+    inline: true,
+    stats: {
+      color: true,
+    }
+  });
+  server.listen(1000);
+});
 
 gulp.task('dev', ['watch']);

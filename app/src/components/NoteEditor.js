@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import CodeMirror from 'react-codemirror';
+import 'codemirror/mode/markdown/markdown';
 import * as Note from '../db/note';
 
 export default class EditorComponent extends Component {
@@ -16,12 +18,15 @@ export default class EditorComponent extends Component {
     this.setState({ value, });
   }
 
+  componentDidMount() {
+  }
+
   handleTitleChange(event) {
     this.setState({ title: event.target.value });
   }
 
-  handleInputChange(event) {
-    this.setState({ content: event.target.value });
+  handleInputChange(newcontent) {
+    this.setState({ content: newcontent });
   }
 
 
@@ -31,19 +36,25 @@ export default class EditorComponent extends Component {
       title: this.state.title,
       content: this.state.content
     });
-    
+
   }
 
   render() {
+    let options = {
+      tabSize: 2,
+      lineWrapping: true,
+      theme: "markdown",
+      mode: {
+        name: 'markdown',
+        highlightFormatting: true
+      },
+    };
     return (
       <div className="editor">
         <div>
           <input type="text" value={this.state.title} onChange={this.handleTitleChange.bind(this)}/>
         </div>
-        <div>
-        <textarea name="" id="" cols="30" rows="10" value={this.state.content}
-                  ref="editorInput" onChange={this.handleInputChange.bind(this)}></textarea>
-        </div>
+        <CodeMirror value={this.state.content} onChange={this.handleInputChange.bind(this)} options={options}/>
         <button onClick={this.save.bind(this)}>保存</button>
       </div>
     )
