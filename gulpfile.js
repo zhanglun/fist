@@ -37,7 +37,7 @@ gulp.task('watch', ['webpack:build-dev'], function () {
 
 gulp.task('devserver', function() {
 
-  webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:1000/", "webpack/hot/dev-server");
+  webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
   var compiler = webpack(webpackConfig);
   var server = new WebpackDevServer(compiler, {
     hot: true,
@@ -46,7 +46,7 @@ gulp.task('devserver', function() {
       color: true,
     }
   });
-  server.listen(1000);
+  server.listen(5000);
 });
 
 gulp.task('dev', ['watch']);

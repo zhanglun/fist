@@ -59,7 +59,7 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    port: 1000,
+    port: 5000,
     inline: true,
     stats: {
       colors: true
