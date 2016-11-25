@@ -57,14 +57,6 @@ module.exports = {
   },
   externals: {
   },
-  devServer: {
-    hot: true,
-    port: 5000,
-    inline: true,
-    stats: {
-      colors: true
-    }
-  },
   plugins: [
     // new ExtractTextPlugin('style.bundle.css'),
     new HtmlWebpackPlugin({

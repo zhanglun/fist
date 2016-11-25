@@ -4,6 +4,7 @@ var babel = require("gulp-babel");
 var gutil = require('gulp-util');
 var webpack = require('webpack');
 var WebpackDevServer = require("webpack-dev-server");
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var webpackConfig = require('./webpack.config.js');
 
 var ROOT_PATH = path.resolve(__dirname);
@@ -35,18 +36,25 @@ gulp.task('watch', ['webpack:build-dev'], function () {
   gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:build-dev']);
 });
 
-gulp.task('devserver', function() {
-
-  webpackConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
-  var compiler = webpack(webpackConfig);
+gulp.task('devserver', ['watch'], function () {
+  var serverConfig = Object.create(webpackConfig);
+  serverConfig.devtool = "eval";
+  serverConfig.debug = true;
+  serverConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
+  serverConfig.plugins.push(new ProgressBarPlugin({ clear: false }));
+  var compiler = webpack(serverConfig);
   var server = new WebpackDevServer(compiler, {
     hot: true,
     inline: true,
-    stats: {
-      color: true,
-    }
+    port: 5000,
+    color: true,
   });
-  server.listen(5000);
+  server.listen(5000, function (err, status) {
+    if (err) {
+      throw new gutil.PluginError("webpack-dev-server", err);
+    }
+    gutil.log("[webpack-dev-server]", "http://localhost:5000/webpack-dev-server/index.html");
+  });
 });
 
 gulp.task('dev', ['watch']);
