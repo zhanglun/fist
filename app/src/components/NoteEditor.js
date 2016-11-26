@@ -44,10 +44,8 @@ export default class EditorComponent extends Component {
 
 
   save() {
-    Note.add(window.currentUser.uid, {
-      title: this.state.title,
-      content: this.state.content
-    });
+    let { note } = this.state;
+    Note.save(window.currentUser.uid, note);
 
   }
 
