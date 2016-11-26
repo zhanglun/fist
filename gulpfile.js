@@ -48,7 +48,7 @@ gulp.task('devserver', ['watch'], function () {
     inline: true,
     port: 5000,
     color: true,
-    content: './app/build'
+    'contentBase': './app/build'
   });
   server.listen(5000, function (err, status) {
     if (err) {

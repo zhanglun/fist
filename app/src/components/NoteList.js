@@ -14,15 +14,14 @@ export default class NoteList extends Component {
     let currentUser = firebase.auth().currentUser;
     if (currentUser) {
       let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid);
-      NoteRef.on('value', function (snapshot) {
-        console.log(snapshot.val());
-
-      });
+      // NoteRef.on('value', function (snapshot) {
+      //   console.log(snapshot.val());
+      // });
       NoteRef.on('child_added', (data) => {
-        console.log('child_added', data.val());
         let { notes } = this.state;
         notes = [].concat(notes);
-        notes.push(data.val());
+        let newNote = Object.assign({}, data.val(), { key: data.ref.key });
+        notes.push(newNote);
         this.setState({ notes, });
       });
       NoteRef.on('child_changed', (data) => {
@@ -35,7 +34,7 @@ export default class NoteList extends Component {
   }
 
   selectNote(note) {
-    let {onSelectNote} = this.props;
+    let { onSelectNote } = this.props;
     onSelectNote(note);
   }
 
@@ -46,7 +45,8 @@ export default class NoteList extends Component {
         <div className="note-container__list">
           {notes.map((note, i) => {
             return (
-              <NoteViewComponent key={i} note={note} onSelectNote={this.selectNote.bind(this, note)}/>
+              <NoteViewComponent key={i} note={note}
+                                 onSelectNote={this.selectNote.bind(this, note)}/>
             );
           })}
         </div>

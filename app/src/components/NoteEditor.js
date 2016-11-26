@@ -14,31 +14,36 @@ export default class EditorComponent extends Component {
   }
 
   componentWillMount() {
-    let { note } = this.props;
-    console.log('editor init note', note);
-    this.setState({ note, });
   }
 
   componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextprops) {
     let { note } = nextprops;
-    console.log('editor update props note', note);
+    let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid + '/' + note.key);
+    NoteRef.on('value', (snapshot) => {
+      console.log(snapshot.val());
+      let note = Object.assign({}, snapshot.val(), { key: snapshot.ref.key });
+      this.setState({ note, });
+    });
+  };
+
+  handleTitleChange(event) {
+    let { note } = this.state;
+    note.title = event.target.value;
     this.setState({ note, });
   }
 
-  handleTitleChange(event) {
-    this.setState({ title: event.target.value });
-  }
-
-  handleInputChange(newcontent) {
-    this.setState({ content: newcontent });
+  handleInputChange(event) {
+    let { note } = this.state;
+    note.content = event.target.value;
+    this.setState({ note, });
   }
 
 
   save() {
-    console.log(Note);
     Note.add(window.currentUser.uid, {
       title: this.state.title,
       content: this.state.content
@@ -50,10 +55,16 @@ export default class EditorComponent extends Component {
     return (
       <div className="editor">
         <div>
-          <input className="editor-input__title" type="text" value={this.state.note.title}
-                 onChange={this.handleTitleChange.bind(this)}/>
-          <textarea id="editor" className="editor-input__content" value={this.state.note.content}
-                    onChange={this.handleInputChange.bind(this)}></textarea>
+          <input
+            className="editor-input__title"
+            type="text"
+            value={this.state.note.title}
+            onChange={this.handleTitleChange.bind(this)}/>
+          <textarea
+            id="editor"
+            className="editor-input__content"
+            value={this.state.note.content}
+            onChange={this.handleInputChange.bind(this)}/>
         </div>
         <button onClick={this.save.bind(this)}>保存</button>
       </div>

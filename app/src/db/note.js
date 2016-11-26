@@ -16,6 +16,7 @@ export function add(userid, note) {
 
   // Write the new post's data simultaneously in the posts list and the user's post list.
   let updates = {};
+  postData.id = newNoteKey;
   updates['/notes/' + newNoteKey] = postData;
   updates['/user-notes/' + userid + '/' + newNoteKey] = postData;
 
@@ -23,6 +24,6 @@ export function add(userid, note) {
 }
 
 export function update(userid, note) {
-
+  // let noteRef = firebase.database().ref('posts/' + note+ '/starCount');
 }
 
