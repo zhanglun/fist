@@ -18,8 +18,8 @@ export default class NoteViewItem extends Component {
   render() {
     let { note } = this.props;
     return (
-      <div className="noteview-item">
-        <div className="noteview-item-title" onClick={this.selectNote.bind(this)}>
+      <div className="noteview-item" onClick={this.selectNote.bind(this)}>
+        <div className="noteview-item-title">
           {note.title}
         </div>
       </div>

@@ -22,3 +22,7 @@ export function add(userid, note) {
   return firebase.database().ref().update(updates);
 }
 
+export function update(userid, note) {
+
+}
+

@@ -15,7 +15,7 @@ var BUILD_PATH = path.resolve(APP_PATH, 'build');
 
 // 开发
 var webpackConfigDev = Object.create(webpackConfig);
-webpackConfigDev.devtool = 'eval-source-map';
+webpackConfigDev.devtool = 'eval';
 webpackConfigDev.debug = true;
 
 var devCompiler = webpack(webpackConfigDev);
@@ -48,6 +48,7 @@ gulp.task('devserver', ['watch'], function () {
     inline: true,
     port: 5000,
     color: true,
+    content: './app/build'
   });
   server.listen(5000, function (err, status) {
     if (err) {

@@ -34,8 +34,9 @@ export default class NoteList extends Component {
     }
   }
 
-  selectNote() {
-    console.log('select it', arguments);
+  selectNote(note) {
+    let {onSelectNote} = this.props;
+    onSelectNote(note);
   }
 
   render() {

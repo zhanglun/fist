@@ -10,6 +10,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       loading: true,
+      currentNote: {}
     };
   }
 
@@ -52,6 +53,10 @@ export default class App extends Component {
   }
 
 
+  selectNote(note) {
+    this.setState({ currentNote: note });
+  }
+
   initApp() {
     let { loading } = this.state;
     let styles = {
@@ -78,9 +83,9 @@ export default class App extends Component {
           <div className="app-container">
             <div style={styles.top}>Header Temp</div>
             <div style={styles.container}>
-              <NoteListComponent />
+              <NoteListComponent onSelectNote={this.selectNote.bind(this)}/>
               <div className="note-detail">
-                <NoteEditorComponent />
+                <NoteEditorComponent note={this.state.currentNote}/>
               </div>
             </div>
           </div>
