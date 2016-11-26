@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
 
-import HeaderComponent from './Header';
+import SidebarComponent from './Sidebar';
 import NoteEditorComponent from './NoteEditor';
 import NoteListComponent from './NoteList';
 
@@ -54,6 +54,16 @@ export default class App extends Component {
 
   initApp() {
     let { loading } = this.state;
+    let styles = {
+      top: {
+        width: '100%',
+        height: 50,
+        borderBottom: '2px solid #f4f4f4',
+      },
+      container: {
+        display: 'flex'
+      }
+    };
     if (loading) {
       return (
         <div>
@@ -64,11 +74,14 @@ export default class App extends Component {
     } else {
       return (
         <div className="app">
-          <HeaderComponent />
+          <SidebarComponent />
           <div className="app-container">
-            <NoteListComponent />
-            <div className="note-detail">
-              <NoteEditorComponent />
+            <div style={styles.top}>Header Temp</div>
+            <div style={styles.container}>
+              <NoteListComponent />
+              <div className="note-detail">
+                <NoteEditorComponent />
+              </div>
             </div>
           </div>
         </div>

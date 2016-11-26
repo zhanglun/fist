@@ -34,6 +34,10 @@ export default class NoteList extends Component {
     }
   }
 
+  selectNote() {
+    console.log('select it', arguments);
+  }
+
   render() {
     let { notes } = this.state;
     return (
@@ -41,7 +45,7 @@ export default class NoteList extends Component {
         <div className="note-container__list">
           {notes.map((note, i) => {
             return (
-              <NoteViewComponent key={i} note={note}/>
+              <NoteViewComponent key={i} note={note} onSelectNote={this.selectNote.bind(this, note)}/>
             );
           })}
         </div>

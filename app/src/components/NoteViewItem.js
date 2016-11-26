@@ -10,11 +10,18 @@ export default class NoteViewItem extends Component {
     // let currentUser = firebase.auth().currentUser;
   }
 
+  selectNote() {
+    let { note, onSelectNote } = this.props;
+    onSelectNote();
+  }
+
   render() {
     let { note } = this.props;
     return (
       <div className="noteview-item">
-        {note.title}
+        <div className="noteview-item-title" onClick={this.selectNote.bind(this)}>
+          {note.title}
+        </div>
       </div>
     );
   }

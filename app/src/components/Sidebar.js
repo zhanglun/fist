@@ -35,7 +35,7 @@ export default class Header extends Component {
       <div className="app-header">
         <div className="header-toolbar">
           <img className="header-toolbar-image" src={user.photoURL} alt=""/>
-          <span>{user.email}</span>
+          {/*<span>{user.email}</span>*/}
         </div>
       </div>
     )
