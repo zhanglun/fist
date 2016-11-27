@@ -38,7 +38,7 @@ gulp.task('watch', ['webpack:build-dev'], function () {
 
 gulp.task('devserver', ['watch'], function () {
   var serverConfig = Object.create(webpackConfig);
-  serverConfig.devtool = "eval";
+  serverConfig.devtool = "eval-source-map";
   serverConfig.debug = true;
   serverConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
   serverConfig.plugins.push(new ProgressBarPlugin({ clear: false }));

@@ -6,7 +6,7 @@ export default class NoteList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: [],
+      notes: {},
     };
   }
 
@@ -19,12 +19,17 @@ export default class NoteList extends Component {
       // });
       NoteRef.on('child_added', (data) => {
         let { notes } = this.state;
-        notes = [].concat(notes);
         let newNote = Object.assign({}, data.val(), { key: data.ref.key });
-        notes.push(newNote);
+        notes[data.ref.key] = newNote;
         this.setState({ notes, });
       });
       NoteRef.on('child_changed', (data) => {
+        let { notes } = this.state;
+        let key = data.ref.key;
+        if (notes[key]) {
+          notes[key] = Object.assign({}, data.val(), { key: data.ref.key });
+          this.setState({ notes, });
+        }
         console.log('child_changed', data);
       });
       NoteRef.on('child_removed', (data) => {
@@ -38,17 +43,27 @@ export default class NoteList extends Component {
     onSelectNote(note);
   }
 
+  renderNoteViews() {
+    let result = [];
+    let { notes } = this.state;
+
+    for (var id in notes) {
+      result.push(<NoteViewComponent
+        key={id}
+        note={notes[id]}
+        onSelectNote={this.selectNote.bind(this, notes[id])}
+      />);
+    }
+    return result;
+  }
+
   render() {
     let { notes } = this.state;
+    console.log(notes);
     return (
       <div className="note-container">
         <div className="note-container__list">
-          {notes.map((note, i) => {
-            return (
-              <NoteViewComponent key={i} note={note}
-                                 onSelectNote={this.selectNote.bind(this, note)}/>
-            );
-          })}
+          {this.renderNoteViews()}
         </div>
       </div>
     );
