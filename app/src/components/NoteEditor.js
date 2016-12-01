@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Quill from 'quill';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
 import * as Note from '../db/note';
+
 
 export default class EditorComponent extends Component {
   constructor(props) {
@@ -11,22 +15,49 @@ export default class EditorComponent extends Component {
         content: '',
       },
     };
+    this.editor = null;
   }
 
   componentWillMount() {
   }
 
   componentDidMount() {
+    let editor = new Quill(ReactDOM.findDOMNode(this.refs.quillTextArea), {
+      theme: 'snow',
+      modules: {
+        toolbar: ['bold', 'italic', 'underline', 'strike', // toggled buttons
+          {
+            'color': [],
+          }, {
+            'size': ['small', false, 'large', 'huge'],
+          }, // custom dropdown
+          {
+            'header': [1, 2, 3, 4, 5, 6, false],
+          }, {
+            'list': 'ordered',
+          }, {
+            'list': 'bullet',
+          },
 
+        ],
+      },
+    });
+    this.editor = editor;
   }
 
   componentWillReceiveProps(nextprops) {
     let { note } = nextprops;
+    let editor = this.editor;
     let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid + '/' + note.key);
     NoteRef.on('value', (snapshot) => {
       console.log(snapshot.val());
       let note = Object.assign({}, snapshot.val(), { key: snapshot.ref.key });
+      let content = note.content;
       this.setState({ note, });
+
+      editor.root.innerHTML = content ;
+      editor.update();
+
     });
   };
 
@@ -44,6 +75,11 @@ export default class EditorComponent extends Component {
 
 
   save() {
+    let editor = this.editor;
+    let content = editor.root.innerHTML;
+    this.setState({
+      content,
+    });
     let { note } = this.state;
     Note.save(window.currentUser.uid, note);
 
@@ -58,11 +94,14 @@ export default class EditorComponent extends Component {
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-          <textarea
-            id="editor"
-            className="editor-input__content"
-            value={this.state.note.content}
-            onChange={this.handleInputChange.bind(this)}/>
+          <div ref="quillTextArea"></div>
+          {/*<textarea*/}
+          {/*id="editor"*/}
+          {/*className="editor-input__content"*/}
+          {/*value={this.state.note.content}*/}
+          {/*onChange={this.handleInputChange.bind(this)}/>*/}
+        </div>
+        <div ref="quillToolbar">
         </div>
         <button onClick={this.save.bind(this)}>保存</button>
       </div>
