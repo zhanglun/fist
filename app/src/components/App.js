@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
 
-import SidebarComponent from './Sidebar';
 import NoteEditorComponent from './NoteEditor';
 import NoteListComponent from './NoteList';
 
@@ -66,7 +65,9 @@ export default class App extends Component {
         borderBottom: '2px solid #f4f4f4',
       },
       container: {
-        display: 'flex'
+        display: 'flex',
+        height: '100%',
+        overflow: 'hidden',
       }
     };
     if (loading) {
@@ -79,9 +80,8 @@ export default class App extends Component {
     } else {
       return (
         <div className="app">
-          <SidebarComponent />
+          {/*<SidebarComponent />*/}
           <div className="app-container">
-            <div style={styles.top}>Header Temp</div>
             <div style={styles.container}>
               <NoteListComponent onSelectNote={this.selectNote.bind(this)}/>
               <div className="note-detail">

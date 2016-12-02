@@ -67,20 +67,19 @@ export default class EditorComponent extends Component {
     this.setState({ note, });
   }
 
-  handleInputChange(event) {
-    let { note } = this.state;
-    note.content = event.target.value;
-    this.setState({ note, });
-  }
+  // handleInputChange(event) {
+  //   let { note } = this.state;
+  //   note.content = event.target.value;
+  //   this.setState({ note, });
+  // }
 
 
   save() {
     let editor = this.editor;
     let content = editor.root.innerHTML;
-    this.setState({
-      content,
-    });
     let { note } = this.state;
+    note.content = content;
+    this.setState({ note, });
     Note.save(window.currentUser.uid, note);
 
   }

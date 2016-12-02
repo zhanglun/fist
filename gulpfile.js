@@ -1,5 +1,6 @@
 var path = require('path');
 var gulp = require('gulp');
+var ghPages = require('gulp-gh-pages');
 var babel = require("gulp-babel");
 var gutil = require('gulp-util');
 var webpack = require('webpack');
@@ -59,3 +60,13 @@ gulp.task('devserver', ['watch'], function () {
 });
 
 gulp.task('dev', ['watch']);
+
+
+gulp.task('build', ['webpack:build-dev']);
+
+gulp.task('deploy', ['build'], function() {
+  return gulp.src('./app/build/**/*')
+    .pipe(ghPages({
+      force: true,
+    }))
+});

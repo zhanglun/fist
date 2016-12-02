@@ -1,7 +1,8 @@
 .note-container {
-  width: 260px;
+  width: 290px;
   box-sizing: border-box;
   border: 1px solid #f4f4f4;
+  overflow-y: scroll;
 }
 
 .note-detail {
@@ -9,18 +10,28 @@
 }
 
 .noteview-item {
-  padding: 14px;
+  height: 70px;
+  padding: 10px 16px;
   font-size: 14px;
   color: #333;
   border-bottom: 1px solid #f4f4f4;
   cursor: pointer;
+  box-sizing: border-box;
   &:hover {
     background-color: #40BC6C;
+  }
+  &:hover &-title, &:hover &-content {
     color: #fff;
   }
   &-title {
-    //font-weight:bolder;
-    //font-size: 16px;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  &-content {
+    font-size: 14px;
+    color: #999;
+    .text-overflow();
   }
 }
 

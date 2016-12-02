@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import React, { Component } from 'react';
 
 export default class NoteViewItem extends Component {
@@ -7,7 +6,6 @@ export default class NoteViewItem extends Component {
   }
 
   componentWillMount() {
-    // let currentUser = firebase.auth().currentUser;
   }
 
   selectNote() {
@@ -17,10 +15,14 @@ export default class NoteViewItem extends Component {
 
   render() {
     let { note } = this.props;
+    let content = note.content ? note.content.replace(/<\/?[^>]*>/ig, '').slice(0, 40): '';
     return (
       <div className="noteview-item" onClick={this.selectNote.bind(this)}>
         <div className="noteview-item-title">
           {note.title}
+        </div>
+        <div className="noteview-item-content">
+          {content}
         </div>
       </div>
     );
