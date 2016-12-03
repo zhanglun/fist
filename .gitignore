@@ -38,4 +38,5 @@ Thumbs.db
 
 **/node_modules/**
 .idea/**
-.publish/
+.publish/*
+app/build/*
