@@ -1,5 +1,6 @@
-import firebase from 'firebase';
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
 import NoteViewComponent from './NoteViewItem';
 
 export default class NoteList extends Component {
@@ -10,7 +11,9 @@ export default class NoteList extends Component {
     };
   }
 
+
   componentWillMount() {
+
     let currentUser = firebase.auth().currentUser;
     if (currentUser) {
       let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid);
@@ -38,6 +41,10 @@ export default class NoteList extends Component {
     }
   }
 
+  componentDidMount() {
+    console.log(this.refs.noteList);
+  }
+
   selectNote(note) {
     let { onSelectNote } = this.props;
     onSelectNote(note);
@@ -61,7 +68,7 @@ export default class NoteList extends Component {
     let { notes } = this.state;
     console.log(notes);
     return (
-      <div className="note-container">
+      <div className="note-container" ref="noteList">
         <div className="note-container__list">
           {this.renderNoteViews()}
         </div>

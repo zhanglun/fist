@@ -37,7 +37,7 @@ gulp.task('watch', ['webpack:build-dev'], function () {
   gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:build-dev']);
 });
 
-gulp.task('devserver', ['watch'], function () {
+gulp.task('devserver', ['copy:lib', 'watch'], function () {
   var serverConfig = Object.create(webpackConfig);
   serverConfig.devtool = "eval-source-map";
   serverConfig.debug = true;
@@ -59,12 +59,17 @@ gulp.task('devserver', ['watch'], function () {
   });
 });
 
+gulp.task('copy:lib', function () {
+  return gulp.src([SRC_PATH + '/lib/**/*.{js,swf}'], { base: SRC_PATH + '/lib' })
+    .pipe(gulp.dest(BUILD_PATH + '/lib/'));
+});
+
 gulp.task('dev', ['watch']);
 
 
-gulp.task('build', ['webpack:build-dev']);
+gulp.task('build', ['copy.lib', 'webpack:build-dev']);
 
-gulp.task('deploy', ['build'], function() {
+gulp.task('deploy', ['build'], function () {
   return gulp.src('./app/build/**/*')
     .pipe(ghPages({
       force: true,

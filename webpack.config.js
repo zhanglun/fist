@@ -52,13 +52,18 @@ module.exports = {
       {
         test: /.css$/,
         loader: 'style!css',
-      }
+      },
     ],
   },
-  externals: {
-  },
+  externals: {},
   plugins: [
     // new ExtractTextPlugin('style.bundle.css'),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      "window.jQuery": 'jquery',
+      firebase: 'firebase',
+    }),
     new HtmlWebpackPlugin({
       template: SRC_PATH + '/index.html',
       filename: BUILD_PATH + '/index.html',
