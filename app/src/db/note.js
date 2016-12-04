@@ -8,8 +8,9 @@ export function add(userid, note) {
     content,
     title,
     author_id: userid,
-    create_time: new Date(),
+    create_time: note.create_time,
     update_time: new Date(),
+    order_desc: -new Date(),
   };
 
   // Get a key for a new Post.
@@ -19,7 +20,7 @@ export function add(userid, note) {
   let updates = {};
   updates['/notes/' + newNoteKey] = postData;
   // 保存到用户的数据去掉 html 标签
-  updates['/user-notes/' + userid + '/' + newNoteKey] = postDatae;
+  updates['/user-notes/' + userid + '/' + newNoteKey] = postData;
 
   return firebase.database().ref().update(updates);
 }
@@ -37,10 +38,10 @@ export function save(userid, note) {
     let data = JSON.parse(JSON.stringify(note));
     delete data.key;
     data.update_time = new Date();
+    data.order_desc = -new Date();
 
     update(userid, note.key, data);
   } else {
-    note.update_time = new Date();
     note.create_time = new Date();
     add(userid, note);
   }

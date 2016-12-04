@@ -16,10 +16,11 @@ export default class NoteList extends Component {
 
     let currentUser = firebase.auth().currentUser;
     if (currentUser) {
-      let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid);
-      // NoteRef.on('value', function (snapshot) {
-      //   console.log(snapshot.val());
-      // });
+      let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid).orderByChild('order_desc');
+      NoteRef.on('value', function (snapshot) {
+        console.log('value');
+        console.log(snapshot.val());
+      });
       NoteRef.on('child_added', (data) => {
         let { notes } = this.state;
         let newNote = Object.assign({}, data.val(), { key: data.ref.key });
@@ -66,7 +67,6 @@ export default class NoteList extends Component {
 
   render() {
     let { notes } = this.state;
-    console.log(notes);
     return (
       <div className="note-container" ref="noteList">
         <div className="note-container__list">

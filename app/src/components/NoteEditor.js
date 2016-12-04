@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-// import SimpleMDE from 'simplemde';
-// import 'simplemde/dist/simplemde.min.css';
 import * as Note from '../db/note';
 
 
@@ -14,6 +11,7 @@ export default class EditorComponent extends Component {
         content: '',
       },
     };
+    this.timer = null;
     this.editor = null;
   }
 
@@ -22,7 +20,6 @@ export default class EditorComponent extends Component {
 
   componentDidMount() {
     this.editor = this.refs.noteTextarea;
-    // this.editor = new SimpleMDE({ element: textarea });
   }
 
   componentWillReceiveProps(nextprops) {
@@ -45,10 +42,15 @@ export default class EditorComponent extends Component {
   }
 
   handleInputChange(event) {
-    console.log('changed....');
     let { note } = this.state;
     note.content = event.target.value;
     this.setState({ note, });
+    this.timer ? clearTimeout(this.timer) : null;
+    let timer = setTimeout(() => {
+      this.save();
+      clearTimeout(timer);
+    }, 1000);
+    this.timer = timer;
   }
 
 
@@ -59,6 +61,7 @@ export default class EditorComponent extends Component {
     note.content = content;
     this.setState({ note, });
     Note.save(window.currentUser.uid, note);
+    console.log('saved');
 
   }
 
