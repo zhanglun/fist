@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Quill from 'quill';
-import 'quill/dist/quill.core.css';
-import 'quill/dist/quill.snow.css';
+// import SimpleMDE from 'simplemde';
+// import 'simplemde/dist/simplemde.min.css';
 import * as Note from '../db/note';
 
 
@@ -22,27 +21,8 @@ export default class EditorComponent extends Component {
   }
 
   componentDidMount() {
-    let editor = new Quill(ReactDOM.findDOMNode(this.refs.quillTextArea), {
-      theme: 'snow',
-      modules: {
-        toolbar: ['bold', 'italic', 'underline', 'strike', // toggled buttons
-          {
-            'color': [],
-          }, {
-            'size': ['small', false, 'large', 'huge'],
-          }, // custom dropdown
-          {
-            'header': [1, 2, 3, 4, 5, 6, false],
-          }, {
-            'list': 'ordered',
-          }, {
-            'list': 'bullet',
-          },
-
-        ],
-      },
-    });
-    this.editor = editor;
+    this.editor = this.refs.noteTextarea;
+    // this.editor = new SimpleMDE({ element: textarea });
   }
 
   componentWillReceiveProps(nextprops) {
@@ -54,10 +34,7 @@ export default class EditorComponent extends Component {
       let note = Object.assign({}, snapshot.val(), { key: snapshot.ref.key });
       let content = note.content;
       this.setState({ note, });
-
-      editor.root.innerHTML = content ;
-      editor.update();
-
+      editor.value = content;
     });
   };
 
@@ -67,16 +44,17 @@ export default class EditorComponent extends Component {
     this.setState({ note, });
   }
 
-  // handleInputChange(event) {
-  //   let { note } = this.state;
-  //   note.content = event.target.value;
-  //   this.setState({ note, });
-  // }
+  handleInputChange(event) {
+    console.log('changed....');
+    let { note } = this.state;
+    note.content = event.target.value;
+    this.setState({ note, });
+  }
 
 
   save() {
     let editor = this.editor;
-    let content = editor.root.innerHTML;
+    let content = editor.value;
     let { note } = this.state;
     note.content = content;
     this.setState({ note, });
@@ -93,16 +71,16 @@ export default class EditorComponent extends Component {
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-          <div ref="quillTextArea"></div>
-          {/*<textarea*/}
-          {/*id="editor"*/}
-          {/*className="editor-input__content"*/}
-          {/*value={this.state.note.content}*/}
-          {/*onChange={this.handleInputChange.bind(this)}/>*/}
+          <textarea
+            className="editor-input__content"
+            value={this.state.note.content}
+            onChange={this.handleInputChange.bind(this)}
+            ref="noteTextarea"
+          />
         </div>
-        <div ref="quillToolbar">
-        </div>
-        <button onClick={this.save.bind(this)}>保存</button>
+        <button className="button button-action button-rounded button-small"
+                onClick={this.save.bind(this)}>保存
+        </button>
       </div>
     )
   }
