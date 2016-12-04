@@ -31,7 +31,7 @@ export default class EditorComponent extends Component {
       let note = Object.assign({}, snapshot.val(), { key: snapshot.ref.key });
       let content = note.content;
       this.setState({ note, });
-      editor.value = content;
+      // editor.value = content;
     });
   };
 
