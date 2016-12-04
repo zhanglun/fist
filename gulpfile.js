@@ -67,7 +67,7 @@ gulp.task('copy:lib', function () {
 gulp.task('dev', ['watch']);
 
 
-gulp.task('build', ['copy.lib', 'webpack:build-dev']);
+gulp.task('build', ['copy:lib', 'webpack:build-dev']);
 
 gulp.task('deploy', ['build'], function () {
   return gulp.src('./app/build/**/*')
