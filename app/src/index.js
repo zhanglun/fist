@@ -1,4 +1,4 @@
-import  './css/style.less';
+import  './public/css/style.less';
 import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/database';
