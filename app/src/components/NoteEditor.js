@@ -45,12 +45,6 @@ export default class EditorComponent extends Component {
     let { note } = this.state;
     note.content = event.target.value;
     this.setState({ note, });
-    this.timer ? clearTimeout(this.timer) : null;
-    let timer = setTimeout(() => {
-      this.save();
-      clearTimeout(timer);
-    }, 1000);
-    this.timer = timer;
   }
 
 
