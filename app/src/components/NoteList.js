@@ -69,6 +69,7 @@ export default class NoteList extends Component {
     let { notes } = this.state;
     return (
       <div className="note-container" ref="noteList">
+        <div className="note-container-toolbar"><h3>笔记列表 <span className="material-icons">add</span></h3></div>
         <div className="note-container__list">
           {this.renderNoteViews()}
         </div>
