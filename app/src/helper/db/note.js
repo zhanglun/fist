@@ -25,6 +25,11 @@ export function add(userid, note) {
   return firebase.database().ref().update(updates);
 }
 
+export function remove(userid, note) {
+  firebase.database().ref('user-notes/' + userid + '/' + note.key).remove();
+  firebase.database().ref('notes/' + note.key).remove();
+}
+
 export function update(userid, key, data) {
   let updates = {};
   updates['/notes/' + key] = data;
