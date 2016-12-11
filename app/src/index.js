@@ -5,14 +5,19 @@ import 'firebase/database';
 
 import React from 'react';
 import { render } from 'react-dom';
-
-// import { connect } from 'redux';
-// import { Provider } from 'react-redux';
+import { connect } from 'redux';
+import { Provider } from 'react-redux';
 
 import AppComponent from './components/App';
 
-import './auth/github';
+import configureStore from './store/configureStore';
+const store = configureStore();
 
-render(<AppComponent />, document.getElementById('app'));
+
+render(
+  <Provider store={store}>
+    <AppComponent />
+  </Provider>
+  , document.getElementById('app'));
 
 window.firebase = firebase;

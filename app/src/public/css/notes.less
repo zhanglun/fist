@@ -24,11 +24,15 @@
   border-bottom: 1px solid #f4f4f4;
   cursor: pointer;
   box-sizing: border-box;
+  position: relative;
   &:hover {
     background-color: #40BC6C;
   }
   &:hover &-title, &:hover &-content {
     color: #fff;
+  }
+  &:hover &-toolbar {
+    display: block;
   }
   &-title {
     font-size: 16px;
@@ -43,6 +47,13 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+  }
+  &-toolbar {
+    display: none;
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    color: #fff;
   }
 }
 

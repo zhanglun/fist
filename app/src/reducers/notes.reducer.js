@@ -1,11 +1,11 @@
-import { ADD_NOTE, REMOVE_NOTE, UPDATE_NOTE } from '/actions';
+import { ADD_NOTE, REMOVE_NOTE, UPDATE_NOTE } from '../actions';
 
 let initNoteState = {
   items: [],
 
 };
 
-export function notes(state = initNoteState, action) {
+export default function notes(state = initNoteState, action) {
   switch (action.type) {
     case ADD_NOTE:
       return state;

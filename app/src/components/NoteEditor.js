@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as Note from '../db/note';
+import * as Note from '../helper/db/note';
 
 
 export default class EditorComponent extends Component {

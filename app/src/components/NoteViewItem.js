@@ -8,9 +8,14 @@ export default class NoteViewItem extends Component {
   componentWillMount() {
   }
 
-  selectNote() {
+  selectNote(e) {
     let { note, onSelectNote } = this.props;
     onSelectNote();
+  }
+
+  deleteNote(e) {
+    console.log('TODO: remove note');
+    e.stopPropagation();
   }
 
   render() {
@@ -23,6 +28,9 @@ export default class NoteViewItem extends Component {
         </div>
         <div className="noteview-item-content">
           {content}
+        </div>
+        <div className="noteview-item-toolbar">
+          <span className="material-icons" onClick={this.deleteNote.bind(this)}>delete</span>
         </div>
       </div>
     );
