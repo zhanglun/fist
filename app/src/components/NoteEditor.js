@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MediumEditor from 'medium-editor';
+import Editor from 'react-medium-editor';
 import 'medium-editor/dist/css/medium-editor.min.css';
 import 'medium-editor/dist/css/themes/beagle.min.css';
 import * as Note from '../helper/db/note';
@@ -22,9 +22,6 @@ export default class EditorComponent extends Component {
   }
 
   componentDidMount() {
-    let dom = this.refs.editor;
-    this.editor = new MediumEditor(dom);
-    dom.focus();
   }
 
   componentWillReceiveProps(nextprops) {
@@ -34,7 +31,6 @@ export default class EditorComponent extends Component {
       console.log(snapshot.val());
       let note = Object.assign({}, snapshot.val(), { key: snapshot.ref.key });
       this.setState({ note, });
-      this.editor.setContent(this.state.note.content);
     });
   };
 
@@ -69,8 +65,11 @@ export default class EditorComponent extends Component {
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-          <div
-            ref="editor"/>
+            <Editor 
+                text={this.state.note.content}
+                onChange={this.handleInputChange.bind(this)}
+                options={{toolbar: {buttons: ['bold', 'italic', 'underline', 'orderedlist', 'unorderedlist', 'h2', 'h3', 'h4']}}}
+            />
         </div>
         <button className="button button-action button-rounded button-small"
                 onClick={this.save.bind(this)}>保存
