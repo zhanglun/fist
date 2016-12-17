@@ -37,9 +37,9 @@ gulp.task('watch', ['webpack:build-dev'], function () {
   gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:build-dev']);
 });
 
-gulp.task('devserver', ['copy:lib', 'watch'], function () {
+gulp.task('devserver', ['copy:lib'], function () {
   var serverConfig = Object.create(webpackConfig);
-  serverConfig.devtool = "eval-source-map";
+  serverConfig.devtool = "source-map";
   serverConfig.debug = true;
   serverConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
   serverConfig.plugins.push(new ProgressBarPlugin({ clear: false }));
@@ -49,6 +49,7 @@ gulp.task('devserver', ['copy:lib', 'watch'], function () {
     inline: true,
     port: 5000,
     color: true,
+    stats: { colors: true },
     'contentBase': './app/build'
   });
   server.listen(5000, function (err, status) {

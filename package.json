@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/zhanglun/fist#readme",
   "dependencies": {
+    "blacklist": "^1.1.4",
     "draft-js": "^0.9.1",
     "draft-js-export-html": "^0.5.2",
     "firebase": "^3.6.1",
