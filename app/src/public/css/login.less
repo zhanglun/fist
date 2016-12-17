@@ -1,0 +1,27 @@
+.theme-color() {
+  &:hover {
+    color: #23944b;
+  }
+}
+
+.login-panel {
+  width: 400px;
+  height: 300px;
+  margin: 120px auto;
+}
+
+.login-icon-button {
+  width: 100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .theme-color;
+  [class^='icon'] {
+    font-size: 24px;
+  }
+  &-text {
+    margin-left: 8px;
+    font-size: 14px;
+  }
+}

@@ -20,19 +20,25 @@ export default class App extends Component {
     super(props);
     this.state = {
       loading: true,
+      auth: false,
       currentNote: {}
     };
   }
 
   componentWillMount() {
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log(user);
         window.currentUser = user;
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          auth: true,
+        });
       } else {
-        this.setState({ loading: true });
+        this.setState({
+          loading: false,
+          auth: false,
+        });
         console.log('not logged in');
       }
     });
@@ -68,7 +74,10 @@ export default class App extends Component {
   }
 
   initApp() {
-    let { loading } = this.state;
+    let {
+      loading,
+      auth,
+    } = this.state;
     let styles = {
       top: {
         width: '100%',
@@ -83,11 +92,15 @@ export default class App extends Component {
     };
     if (loading) {
       return (
-        <div>
-          <p>Loading...</p>
-          <button onClick={this.signIn.bind(this)}>sign in with github</button>
-        </div>
+        <h2>Loading...</h2>
       )
+    } else if (!loading && !auth) {
+      return (<div className="login-panel">
+        <span className=" login-icon-button" onClick={this.signIn.bind(this)}>
+          <span className="icon-github"></span>
+          <span className="login-icon-button-text">Github</span>
+        </span>
+      </div>)
     } else {
       return (
         <div className="app">
