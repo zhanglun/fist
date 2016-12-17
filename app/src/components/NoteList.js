@@ -69,7 +69,13 @@ export default class NoteList extends Component {
     let { notes } = this.state;
     return (
       <div className="note-container" ref="noteList">
-        <div className="note-container-toolbar"><h3>笔记列表 <span className="material-icons">add</span></h3></div>
+        <div className="note-container-toolbar">
+          <div className="note-searcher">
+            <span className="icon-search"></span>
+            <input type="text" placeholder="搜索笔记" className="note-searcher__text-input"/>
+          </div>
+          <span className="icon-plus note-container-toolbar__addnote"></span>
+        </div>
         <div className="note-container__list">
           {this.renderNoteViews()}
         </div>
