@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Editor from 'react-medium-editor';
+import RMEditor from './Editor';
 import 'medium-editor/dist/css/medium-editor.min.css';
 import 'medium-editor/dist/css/themes/beagle.min.css';
 import * as Note from '../helper/db/note';
@@ -14,8 +14,12 @@ export default class EditorComponent extends Component {
         content: '',
       },
     };
-    this.editor = null;
-
+    this.editorOptions = {
+      toolbar: {
+        buttons: ['bold', 'italic', 'underline', 'orderedlist', 'unorderedlist', 'h2', 'h3', 'h4']
+      },
+      placeholder: false,
+    };
   }
 
   componentWillMount() {
@@ -65,11 +69,11 @@ export default class EditorComponent extends Component {
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-            <Editor 
-                text={this.state.note.content}
-                onChange={this.handleInputChange.bind(this)}
-                options={{toolbar: {buttons: ['bold', 'italic', 'underline', 'orderedlist', 'unorderedlist', 'h2', 'h3', 'h4']}}}
-            />
+          <RMEditor
+            text={this.state.note.content}
+            onChange={this.handleInputChange.bind(this)}
+            options={this.editorOptions}
+          />
         </div>
         <button className="button button-action button-rounded button-small"
                 onClick={this.save.bind(this)}>保存
