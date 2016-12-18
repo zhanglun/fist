@@ -53,8 +53,8 @@ export default class EditorComponent extends Component {
 
   save() {
     let { note } = this.state;
-    note.content = this.editor.getContent();
-    this.setState({ note, });
+    // note.content = this.editor.getContent();
+    // this.setState({ note, });
     Note.save(window.currentUser.uid, note);
     console.log('saved');
 

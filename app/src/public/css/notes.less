@@ -1,12 +1,22 @@
 .note-container {
   width: 290px;
+  padding-top: 50px;
   box-sizing: border-box;
   border: 1px solid #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  position: relative;
   &-toolbar {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 14px;
+    min-height: 50px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
     [class^="icon"] {
       font-size: 14px;
     }
@@ -18,7 +28,6 @@
     border-top: 1px solid #f4f4f4;
     overflow-y: scroll;
     height: 100%;
-    flex: 1;
   }
 }
 
@@ -38,6 +47,10 @@
     //  border-bottom: 1px solid #999;
     //}
   }
+}
+
+.notelist {
+
 }
 
 .note-detail {

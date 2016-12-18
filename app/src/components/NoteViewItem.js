@@ -30,7 +30,7 @@ export default class NoteViewItem extends Component {
           {content}
         </div>
         <div className="noteview-item-toolbar">
-          <span className="material-icons" onClick={this.deleteNote.bind(this)}>delete</span>
+          <span className="icon-bin" onClick={this.deleteNote.bind(this)}></span>
         </div>
       </div>
     );

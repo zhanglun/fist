@@ -77,7 +77,9 @@ export default class NoteList extends Component {
           <span className="icon-plus note-container-toolbar__addnote"></span>
         </div>
         <div className="note-container__list">
-          {this.renderNoteViews()}
+          {/*<div className="notelist-box">*/}
+            {this.renderNoteViews()}
+          {/*</div>*/}
         </div>
       </div>
     );
