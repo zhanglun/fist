@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import RMEditor from './Editor';
-import 'medium-editor/dist/css/medium-editor.min.css';
-import 'medium-editor/dist/css/themes/beagle.min.css';
+import SimpleMDE from 'simplemde';
+import 'simplemde/dist/simplemde.min.css';
 import * as Note from '../helper/db/note';
 
 
@@ -14,22 +13,41 @@ export default class EditorComponent extends Component {
         content: '',
       },
     };
-    this.editorOptions = {
-      toolbar: {
-        buttons: ['bold', 'italic', 'underline', 'orderedlist', 'unorderedlist', 'h2', 'h3', 'h4']
-      },
-      placeholder: false,
-    };
   }
 
   componentWillMount() {
   }
 
   componentDidMount() {
+    let { note } = this.props;
+    let dom = this.refs.editor;
+    this.editor = new SimpleMDE({
+      // element: dom,
+      hideIcons: ["guide", "heading"],
+      indentWithTabs: false,
+      initialValue: '',
+      insertTexts: {
+        horizontalRule: ["", "\n\n-----\n\n"],
+        image: ["![](http://", ")"],
+        link: ["[", "](http://)"],
+        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+      },
+      lineWrapping: false,
+      placeholder: "Type here...",
+      shortcuts: {
+        drawTable: "Cmd-Alt-T"
+      },
+      showIcons: ["code", "table"],
+      spellChecker: false,
+      styleSelectedText: false,
+      tabSize: 4,
+      toolbarTips: false,
+    });
   }
 
   componentWillReceiveProps(nextprops) {
     let { note } = nextprops;
+    this.editor.value(note.content);
     let NoteRef = firebase.database().ref('user-notes/' + currentUser.uid + '/' + note.key);
     NoteRef.on('value', (snapshot) => {
       console.log(snapshot.val());
@@ -44,37 +62,22 @@ export default class EditorComponent extends Component {
     this.setState({ note, });
   }
 
-  handleInputChange(text, meduim) {
-    let { note } = this.state;
-    note.content = text;
-    this.setState({ note, });
-  }
-
-
   save() {
     let { note } = this.state;
-    // note.content = this.editor.getContent();
-    // this.setState({ note, });
+    note.content = this.editor.value();
+    this.setState({ note, });
     Note.save(window.currentUser.uid, note);
-    console.log('saved');
-
   }
 
   render() {
     return (
       <div className="editor">
-        <div>
           <input
             className="editor-input__title"
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-          <RMEditor
-            text={this.state.note.content}
-            onChange={this.handleInputChange.bind(this)}
-            options={this.editorOptions}
-          />
-        </div>
+          <textarea></textarea>
         <button className="button button-action button-rounded button-small"
                 onClick={this.save.bind(this)}>保存
         </button>
