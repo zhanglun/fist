@@ -37,7 +37,12 @@ export default class NoteList extends Component {
         console.log('child_changed', data);
       });
       NoteRef.on('child_removed', (data) => {
-        console.log('child_removed', data);
+        let notes  = Object.assign({}, this.state.notes);
+        let key = data.ref.key;
+        if (notes[key]) {
+          delete notes[key]
+          this.setState({ notes, });
+        }
       });
     }
   }

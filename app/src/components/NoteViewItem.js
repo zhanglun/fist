@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as Note from '../helper/db/note';
 
 export default class NoteViewItem extends Component {
   constructor(props) {
@@ -15,6 +16,9 @@ export default class NoteViewItem extends Component {
 
   deleteNote(e) {
     console.log('TODO: remove note');
+    let { note } = this.props;
+    Note.remove(note.author_id, note);
+    console.log(note);
     e.stopPropagation();
   }
 
@@ -30,7 +34,7 @@ export default class NoteViewItem extends Component {
           {content}
         </div>
         <div className="noteview-item-toolbar">
-          <span className="icon-bin" onClick={this.deleteNote.bind(this)}></span>
+          <span className="icon-bin" onClick={this.deleteNote.bind(this)}/>
         </div>
       </div>
     );
