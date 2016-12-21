@@ -1,11 +1,13 @@
-.note-container {
+.sidebar-notes {
   width: 290px;
+  height: 100%;
   padding-top: 50px;
   box-sizing: border-box;
   border: 1px solid #f4f4f4;
   display: flex;
   flex-direction: column;
   position: relative;
+  float: left;
   &-toolbar {
     width: 100%;
     display: flex;
@@ -24,38 +26,25 @@
       cursor: pointer;
     }
   }
-  &__list {
-    border-top: 1px solid #f4f4f4;
-    overflow-y: scroll;
-    height: 100%;
-  }
-}
-
-.note-searcher {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  padding-right: 14px;
-  &__text-input {
-    margin-left: 4px;
-    font-size: 14px;
-    border: none;
-    //border-bottom: 1px solid transparent;
-    outline: none;
+  &-searcher {
+    display: flex;
+    align-items: center;
     flex: 1;
-    //&:focus {
-    //  border-bottom: 1px solid #999;
-    //}
+    padding-right: 14px;
+    &__text-input {
+      margin-left: 4px;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      flex: 1;
+    }
   }
 }
 
-.notelist {
-
-}
-
-.note-detail {
+.sidebar-notesview {
+  border-top: 1px solid #f4f4f4;
   overflow-y: scroll;
-  flex: 1;
+  height: 100%;
 }
 
 .noteview-item {
@@ -99,39 +88,41 @@
   }
 }
 
-.editor {
-  padding-left: 20px;
-}
-
-.editor-input {
-  &__title {
-    display: block;
-    width: 100%;
-    font-size: 28px;
+.note-detail {
+  margin-left: 290px;
+ height: 100%;
+  box-sizing: border-box;
+  &-toolbar {
     box-sizing: border-box;
-    border: none;
-    outline: none;
-    padding: 8px 10px;
-    margin: 20px 0 10px;
-  }
-  &__content {
-    display: block;
-    width: 100%;
-    height: 400px;
-    padding: 8px 10px;
-    font-size: 14px;
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    resize: none;
+    padding: 10px;
+    height: 50px;
   }
 }
 
-//.editor-toolbar {
-//  padding: 4px !important;
-//
-//  &:after, &:before {
-//    margin: 0 !important;
-//    height: 0 !important;
-//  }
-//}
+.note-editor {
+  border-top: 1px solid #f4f4f4;
+  padding: 10px;
+  &-input {
+    &__title {
+      display: block;
+      width: 100%;
+      font-size: 28px;
+      box-sizing: border-box;
+      border: none;
+      outline: none;
+      padding: 8px 10px;
+      margin: 10px 0 10px;
+    }
+    &__content {
+      display: block;
+      width: 100%;
+      height: 400px;
+      padding: 8px 10px;
+      font-size: 14px;
+      box-sizing: border-box;
+      border: none;
+      outline: none;
+      resize: none;
+    }
+  }
+}

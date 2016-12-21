@@ -37,7 +37,7 @@ export default class NoteList extends Component {
         console.log('child_changed', data);
       });
       NoteRef.on('child_removed', (data) => {
-        let notes  = Object.assign({}, this.state.notes);
+        let notes = Object.assign({}, this.state.notes);
         let key = data.ref.key;
         if (notes[key]) {
           delete notes[key]
@@ -73,17 +73,17 @@ export default class NoteList extends Component {
   render() {
     let { notes } = this.state;
     return (
-      <div className="note-container" ref="noteList">
-        <div className="note-container-toolbar">
-          <div className="note-searcher">
-            <span className="icon-search"></span>
-            <input type="text" placeholder="搜索笔记" className="note-searcher__text-input"/>
+      <div className="sidebar-notes" ref="noteList">
+        <div className="sidebar-notes-toolbar">
+          <div className="sidebar-notes-searcher">
+            <span className="icon-search"/>
+            <input type="text" placeholder="搜索笔记" className="sidebar-notes-searcher__text-input"/>
           </div>
-          <span className="icon-plus note-container-toolbar__addnote"></span>
+          <span className="icon-plus sidebar-notes-toolbar__addnote"/>
         </div>
-        <div className="note-container__list">
+        <div className="sidebar-notesview">
           {/*<div className="notelist-box">*/}
-            {this.renderNoteViews()}
+          {this.renderNoteViews()}
           {/*</div>*/}
         </div>
       </div>

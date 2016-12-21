@@ -71,16 +71,22 @@ export default class EditorComponent extends Component {
 
   render() {
     return (
-      <div className="editor">
+      <div className="note-detail">
+        <div className="note-detail-toolbar">
+
+        </div>
+        <div className="note-editor">
           <input
-            className="editor-input__title"
+            className="note-editor-input__title"
             type="text"
             value={this.state.note.title}
             onChange={this.handleTitleChange.bind(this)}/>
-          <textarea></textarea>
-        <button className="button button-action button-rounded button-small"
-                onClick={this.save.bind(this)}>保存
-        </button>
+          <textarea />
+          <button
+            className="button button-action button-rounded button-small"
+            onClick={this.save.bind(this)}>保存
+          </button>
+        </div>
       </div>
     )
   }
