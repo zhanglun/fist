@@ -40,4 +40,5 @@ Thumbs.db
 .idea/**
 .publish/*
 app/build/*
-.publish/*
+.publish/**
+.publish
