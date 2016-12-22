@@ -26,13 +26,13 @@ export default class EditorComponent extends Component {
       hideIcons: ["guide", "heading"],
       indentWithTabs: false,
       initialValue: '',
+      toolbar: false,
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
         image: ["![](http://", ")"],
         link: ["[", "](http://)"],
         table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
       },
-      lineWrapping: false,
       placeholder: "Type here...",
       shortcuts: {
         drawTable: "Cmd-Alt-T"
@@ -40,7 +40,7 @@ export default class EditorComponent extends Component {
       showIcons: ["code", "table"],
       spellChecker: false,
       styleSelectedText: false,
-      tabSize: 4,
+      tabSize: 2,
       toolbarTips: false,
     });
   }
