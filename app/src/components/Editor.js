@@ -61,7 +61,7 @@ export default class EditorComponent extends Component {
   }
 
   save() {
-    let {onSave} = this.props;
+    let {onSave, autoHide} = this.props;
     let {title, content} = this.state;
     content = this.editor.value();
     onSave({title, content});

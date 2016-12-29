@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 
 import NoteDetailComponent from './NoteDetail';
 import NoteListComponent from './NoteList';
+import NewNoteComponent from './NewNote';
 // import SidebarComponent from './Sidebar';
 
 export default class App extends Component {
@@ -22,7 +23,8 @@ export default class App extends Component {
     this.state = {
       loading: true,
       auth: false,
-      currentNote: null
+      currentNote: null,
+      showNewNoteEditor: false,
     };
   }
 
@@ -73,42 +75,10 @@ export default class App extends Component {
     this.setState({ currentNote: note });
   }
 
-  initApp() {
-    let {
-      loading,
-      auth,
-    } = this.state;
-    let styles = {
-      top: {
-        width: '100%',
-        height: 50,
-        borderBottom: '2px solid #f4f4f4',
-      },
-      container: {
-        display: 'flex',
-        height: '100%',
-        overflow: 'hidden',
-      }
-    };
-    if (loading) {
-      return (
-        <h2>Loading...</h2>
-      )
-    } else if (!loading && !auth) {
-      return (<div className="login-panel">
-        <span className=" login-icon-button" onClick={this.signIn.bind(this)}>
-          <span className="icon-github" />
-          <span className="login-icon-button-text">Github</span>
-        </span>
-      </div>)
-    } else {
-
-      return (
-        [<NoteListComponent onSelectNote={this.selectNote.bind(this)} key={'list'} />,
-        <NoteDetailComponent note={this.state.currentNote} key={'list2'} />
-        ]
-      )
-    }
+  openNewNoteEditor() {
+    this.setState({
+      showNewNoteEditor: true,
+    });
   }
 
   render() {
@@ -147,7 +117,12 @@ export default class App extends Component {
     } else {
       return (
       <div className="app">
-        <NoteListComponent onSelectNote={this.selectNote.bind(this)} key={'list'} />
+        <NewNoteComponent isOpen={this.state.showNewNoteEditor} />
+        <NoteListComponent 
+          onSelectNote={this.selectNote.bind(this)} key={'list'}
+          openNewNoteEditor={this.openNewNoteEditor.bind(this)}
+           />
+        
         {this.state.currentNote && <NoteDetailComponent note={this.state.currentNote} key={'list2'} />}
       </div>
       )
