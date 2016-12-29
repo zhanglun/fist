@@ -12,7 +12,7 @@ firebase.initializeApp(config);
 
 import React, { Component } from 'react';
 
-import NoteEditorComponent from './NoteEditor';
+import NoteDetailComponent from './NoteDetail';
 import NoteListComponent from './NoteList';
 // import SidebarComponent from './Sidebar';
 
@@ -22,14 +22,13 @@ export default class App extends Component {
     this.state = {
       loading: true,
       auth: false,
-      currentNote: {}
+      currentNote: null
     };
   }
 
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
         window.currentUser = user;
         this.setState({
           loading: false,
@@ -98,24 +97,60 @@ export default class App extends Component {
     } else if (!loading && !auth) {
       return (<div className="login-panel">
         <span className=" login-icon-button" onClick={this.signIn.bind(this)}>
-          <span className="icon-github"/>
+          <span className="icon-github" />
           <span className="login-icon-button-text">Github</span>
         </span>
       </div>)
     } else {
+
       return (
-        [<NoteListComponent onSelectNote={this.selectNote.bind(this)} key={'list'}/>,
-          <NoteEditorComponent note={this.state.currentNote} key={'list2'}/>
+        [<NoteListComponent onSelectNote={this.selectNote.bind(this)} key={'list'} />,
+        <NoteDetailComponent note={this.state.currentNote} key={'list2'} />
         ]
       )
     }
   }
 
   render() {
-    return (
+    let {
+      loading,
+      auth,
+    } = this.state;
+    let styles = {
+      top: {
+        width: '100%',
+        height: 50,
+        borderBottom: '2px solid #f4f4f4',
+      },
+      container: {
+        display: 'flex',
+        height: '100%',
+        overflow: 'hidden',
+      }
+    };
+    if (loading) {
+      return (
+        <div className="app">
+          <h2>Loading...</h2>
+        </div>
+      )
+    } else if (!loading && !auth) {
+      return (
+        <div className="app">
+          <div className="login-panel">
+          <span className=" login-icon-button" onClick={this.signIn.bind(this)}>
+            <span className="icon-github" />
+            <span className="login-icon-button-text">Github</span>
+          </span>
+          </div>
+        </div>)
+    } else {
+      return (
       <div className="app">
-        {this.initApp()}
+        <NoteListComponent onSelectNote={this.selectNote.bind(this)} key={'list'} />
+        {this.state.currentNote && <NoteDetailComponent note={this.state.currentNote} key={'list2'} />}
       </div>
-    )
+      )
+    }
   }
 }

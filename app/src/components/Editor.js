@@ -1,67 +1,86 @@
 import React, { Component } from 'react';
+import SimpleMDE from 'simplemde';
+import 'simplemde/dist/simplemde.min.css';
+import * as Note from '../helper/db/note';
 
-import ReactDOM from 'react-dom';
-import MediumEditor from 'medium-editor';
-import blacklist from 'blacklist';
-import 'medium-editor/dist/css/medium-editor.min.css';
-import 'medium-editor/dist/css/themes/beagle.min.css';
 
-class RMEditor extends Component {
-
+export default class EditorComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: this.props.text,
+      title: props.title,
+      content: props.content,
     };
   }
 
+  componentWillMount() {
+  
+  }
+
   componentDidMount() {
-    const dom = ReactDOM.findDOMNode(this);
 
-    this.medium = new MediumEditor(dom, this.props.options);
-    this.medium.subscribe('editableInput', (e) => {
-      this._updated = true;
-      this.change(dom.innerHTML);
+    let dom = this.refs.editor;
+    this.editor = new SimpleMDE({
+      // element: dom,
+      hideIcons: ["guide", "heading"],
+      indentWithTabs: false,
+      initialValue: this.state.content,
+      toolbar: false,
+      insertTexts: {
+        horizontalRule: ["", "\n\n-----\n\n"],
+        image: ["![](http://", ")"],
+        link: ["[", "](http://)"],
+        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+      },
+      placeholder: "Type here...",
+      shortcuts: {
+        drawTable: "Cmd-Alt-T"
+      },
+      showIcons: ["code", "table"],
+      spellChecker: false,
+      styleSelectedText: false,
+      tabSize: 2,
+      toolbarTips: false,
     });
+    // this.editor.value(this.state.content);
   }
 
-  componentDidUpdate() {
-    this.medium.restoreSelection();
+  componentWillReceiveProps(nextprops) {
+    let { title, content } = nextprops;
+    this.setState({
+      title,
+      content,
+    });
+    this.editor.value(content);
+  };
+
+  handleTitleChange(event) {
+    let { note } = this.state;
+    let {onTitleChange} = this.props;
+    onTitleChange(event.target.value);
   }
 
-  componentWillUnmount() {
-    this.medium.destroy();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.text !== this.state.text && !this._updated) {
-      this.setState({ text: nextProps.text });
-    }
-
-    if (this._updated) this._updated = false;
+  save() {
+    let {onSave} = this.props;
+    let {title, content} = this.state;
+    content = this.editor.value();
+    onSave({title, content});
   }
 
   render() {
-    let tag = this.props.tag;
-    let props = blacklist(this.props, 'options', 'text', 'tag', 'contentEditable', 'dangerouslySetInnerHTML');
-    props = Object.assign({}, props, {
-      dangerouslySetInnerHTML: { __html: this.state.text }
-    });
-    if (this.medium) {
-      this.medium.saveSelection();
-    }
-
-    return React.createElement(tag, props);
+    return (
+        <div className="note-editor">
+          <input
+            className="note-editor-input__title"
+            type="text"
+            value={this.state.title}
+            onChange={this.handleTitleChange.bind(this)}/>
+          <textarea />
+          <button
+            className="button button-action button-rounded button-small"
+            onClick={this.save.bind(this)}>保存
+          </button>
+        </div>
+    )
   }
-
-  change(text) {
-    if (this.props.onChange) this.props.onChange(text, this.medium);
-  }
-
 }
-
-RMEditor.defaultProps = {
-  tag: 'div',
-};
-
-export default RMEditor;

@@ -49,6 +49,7 @@ export default class NoteList extends Component {
 
   componentDidMount() {
     console.log(this.refs.noteList);
+    
   }
 
   selectNote(note) {
