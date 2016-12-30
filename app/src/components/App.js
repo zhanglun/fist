@@ -120,7 +120,7 @@ export default class App extends Component {
         <NewNoteComponent isOpen={this.state.showNewNoteEditor} />
         <NoteListComponent 
           onSelectNote={this.selectNote.bind(this)} key={'list'}
-          openNewNoteEditor={this.openNewNoteEditor.bind(this)}
+          onOpenNewNoteEditor={this.openNewNoteEditor.bind(this)}
            />
         
         {this.state.currentNote && <NoteDetailComponent note={this.state.currentNote} key={'list2'} />}
