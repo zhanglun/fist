@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import * as Note from '../helper/db/note';
+import NoteToolbarComponent from './NoteToolbar';
 import EditorComponent from './Editor.js';
 
 export default class NoteDetailComponent extends Component {
@@ -40,14 +41,21 @@ export default class NoteDetailComponent extends Component {
     Note.save(window.currentUser.uid, note);
   }
 
+  handleTagsChange() {
+
+  }
+
   render() {
     let {note} = this.state;
     return (
       <div className="note-detail">
-        <div className="note-detail-toolbar"></div>
+        <div className="note-detail-toolbar">
+          <NoteToolbarComponent tags={[123, 'CSS', '学习笔记']} onTagsChange={this.handleTagsChange.bind(this)}/>
+        </div>
         <EditorComponent
           title={note.title}
           content={note.content}
+          id={note.key}
           onSave={this
           .save
           .bind(this)}
