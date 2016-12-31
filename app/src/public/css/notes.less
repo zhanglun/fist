@@ -1,9 +1,11 @@
+@import './variables';
+
 .sidebar-notes {
   width: 290px;
   height: 100%;
   padding-top: 50px;
   box-sizing: border-box;
-  border: 1px solid #f4f4f4;
+  border-right: 1px solid @containerBorderColor;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -42,8 +44,8 @@
 }
 
 .sidebar-notesview {
-  border-top: 1px solid #f4f4f4;
   overflow-y: scroll;
+  border-top: 1px solid @containerBorderColor;
   height: 100%;
 }
 
@@ -100,7 +102,7 @@
 }
 
 .note-editor {
-  border-top: 1px solid #f4f4f4;
+  border-top: 1px solid @containerBorderColor;
   &-input {
     &__title {
       display: block;
