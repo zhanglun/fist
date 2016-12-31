@@ -10,6 +10,7 @@ export default class EditorComponent extends Component {
     this.state = {
       title: props.title,
       content: props.content,
+      id: props.id,
     };
   }
 
@@ -44,17 +45,24 @@ export default class EditorComponent extends Component {
       toolbarTips: false,
       status: false,
     });
-    // this.editor.value(this.state.content);
+    this.editor.codemirror.on("change", () => {
+      if (this.editor.timer) {
+        clearTimeout(this.editor.timer);
+      }
+      this.editor.timer = setTimeout(() => {
+        this.save();
+        console.log(this.editor.value());
+      }, 2000);
+    });
   }
 
   componentWillReceiveProps(nextprops) {
-    let { title, content } = nextprops;
-    debugger;
-    if (content !== this.state.content) {
-      this.setState({ content, });
+    let { title, content, id } = nextprops;
+    if (content !== this.state.content && id !== this.state.id) {
+      this.setState({ content, id, });
       this.editor.value(content);
     }
-    if (content !== this.state.content) {
+    if (title !== this.state.title && id !== this.state.id) {
       this.setState({ title, });
     }
   };
@@ -66,7 +74,7 @@ export default class EditorComponent extends Component {
   }
 
   save() {
-    let { onSave, autoHide } = this.props;
+    let { onSave } = this.props;
     let { title, content } = this.state;
     content = this.editor.value();
     onSave({ title, content });
@@ -81,10 +89,10 @@ export default class EditorComponent extends Component {
           value={this.state.title}
           onChange={this.handleTitleChange.bind(this)}/>
         <textarea />
-        <button
-          className="button button-action button-rounded button-small"
-          onClick={this.save.bind(this)}>保存
-        </button>
+        {/*<button*/}
+        {/*className="button button-action button-rounded button-small"*/}
+        {/*onClick={this.save.bind(this)}>保存*/}
+        {/*</button>*/}
       </div>
     )
   }

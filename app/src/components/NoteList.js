@@ -44,7 +44,7 @@ export default class NoteList extends Component {
         let notes = Object.assign({}, this.state.notes);
         let key = data.ref.key;
         if (notes[key]) {
-          delete notes[key]
+          delete notes[key];
           this.setState({notes});
         }
       });
