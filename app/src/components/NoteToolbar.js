@@ -23,11 +23,13 @@ export default class NoteToolbarComponent extends Component {
   }
 
   handleKeyDown(event) {
-    if (event.keyCode !== 13) {
-      return false;
+    if (!event.target.value && event.keyCode == 8) {
+      this.removeTags();
     }
-    let value = event.target.value;
-    this.addTags(value);
+    if (event.keyCode == 13) {
+      let value = event.target.value;
+      this.addTags(value);
+    }
   }
 
   addTags(tag) {
@@ -41,6 +43,18 @@ export default class NoteToolbarComponent extends Component {
     }
 
     this.refs.input.value = '';
+  }
+
+  removeTags(tag) {
+    let { tags } = this.state;
+    if (tag) {
+      tags.splice(tags.indexOf(tag) - 1);
+    } else {
+      tags.pop();
+    }
+    this.setState({
+      tags,
+    });
   }
 
 
