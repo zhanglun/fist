@@ -43,18 +43,21 @@ export default class NoteToolbarComponent extends Component {
     }
 
     this.refs.input.value = '';
+    this.props.onTagsChange(tags, tag);
   }
 
   removeTags(tag) {
     let { tags } = this.state;
+    let removed = null;
     if (tag) {
-      tags.splice(tags.indexOf(tag) - 1);
+      removed = tags.splice(tags.indexOf(tag) - 1);
     } else {
-      tags.pop();
+      removed = tags.pop();
     }
     this.setState({
       tags,
     });
+    this.props.onTagsChange(tags, removed);
   }
 
 

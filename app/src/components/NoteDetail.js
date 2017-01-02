@@ -43,6 +43,7 @@ export default class NoteDetailComponent extends Component {
 
   handleTagsChange() {
     // TODO:
+    console.log(arguments);
     console.log('TODO: 保存 tags');
   }
 
