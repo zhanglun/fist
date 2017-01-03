@@ -46,12 +46,17 @@ export default class EditorComponent extends Component {
       status: false,
     });
     this.editor.codemirror.on("change", () => {
+      this.setState({
+        content: this.editor.value(),
+      });
+      if (this.props.type == 'new') {
+        return false;
+      }
       if (this.editor.timer) {
         clearTimeout(this.editor.timer);
       }
       this.editor.timer = setTimeout(() => {
         this.save();
-        console.log(this.editor.value());
       }, 2000);
     });
   }
@@ -67,10 +72,17 @@ export default class EditorComponent extends Component {
     }
   };
 
+  onClose() {
+    let { onClose } = this.props;
+    onClose();
+  }
+
   handleTitleChange(event) {
-    let { note } = this.state;
     let { onTitleChange } = this.props;
     onTitleChange(event.target.value);
+    this.setState({
+      title: event.target.value,
+    })
   }
 
   save() {
@@ -80,19 +92,42 @@ export default class EditorComponent extends Component {
     onSave({ title, content });
   }
 
+  renderButtons() {
+    let {
+      showButton
+    } = this.props;
+    let result = null;
+    if (!showButton) {
+      return false;
+    } else {
+      if (this.editor && this.editor.value()) {
+        result = <button
+          className="button button-action button-rounded button-small"
+          onClick={this.save.bind(this)}>
+          完成
+        </button>;
+      } else {
+        result = <button
+          className="button button-action button-rounded button-small"
+          onClick={this.onClose.bind(this)}>取消
+        </button>
+      }
+    }
+    return result;
+  }
+
   render() {
     return (
       <div className="note-editor">
-        <input
-          className="note-editor-input__title"
-          type="text"
-          value={this.state.title}
-          onChange={this.handleTitleChange.bind(this)}/>
+        <div className="note-editor-header">
+          <input
+            className="note-editor-input__title"
+            type="text"
+            value={this.state.title}
+            onChange={this.handleTitleChange.bind(this)}/>
+          {this.renderButtons()}
+        </div>
         <textarea />
-        {/*<button*/}
-        {/*className="button button-action button-rounded button-small"*/}
-        {/*onClick={this.save.bind(this)}>保存*/}
-        {/*</button>*/}
       </div>
     )
   }

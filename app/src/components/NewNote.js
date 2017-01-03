@@ -29,6 +29,11 @@ export default class NewNoteComponent extends Component {
     }
   }
 
+  handleClose() {
+    let { onClose } = this.props;
+    onClose();
+  }
+
   handleTitleChange(title) {
     let { note } = this.state;
     note.title = title;
@@ -37,13 +42,12 @@ export default class NewNoteComponent extends Component {
 
   save(data) {
     let { note } = this.state;
+    let { onClose } = this.props;
     note.title = data.title;
     note.content = data.content;
     this.setState({ note });
     Note.save(window.currentUser.uid, note);
-    this.setState({
-      isOpen: false,
-    });
+    onClose();
   }
 
   render() {
@@ -55,6 +59,9 @@ export default class NewNoteComponent extends Component {
             title={note.title}
             content={note.content}
             onSave={this.save.bind(this)}
+            showButton={true}
+            type={'new'}
+            onClose={this.handleClose.bind(this)}
             onTitleChange={this.handleTitleChange.bind(this)}/>
         </div>}
       </div>

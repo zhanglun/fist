@@ -81,6 +81,12 @@ export default class App extends Component {
     });
   }
 
+  handleCloseNewNote() {
+    this.setState({
+      showNewNoteEditor: false,
+    });
+  }
+
   render() {
     let {
       loading,
@@ -117,12 +123,15 @@ export default class App extends Component {
     } else {
       return (
       <div className="app">
-        <NewNoteComponent isOpen={this.state.showNewNoteEditor} />
-        <NoteListComponent 
+        <NewNoteComponent
+          isOpen={this.state.showNewNoteEditor}
+          onClose={this.handleCloseNewNote.bind(this)}
+        />
+        <NoteListComponent
           onSelectNote={this.selectNote.bind(this)} key={'list'}
           onOpenNewNoteEditor={this.openNewNoteEditor.bind(this)}
            />
-        
+
         {this.state.currentNote && <NoteDetailComponent note={this.state.currentNote} key={'list2'} />}
       </div>
       )
