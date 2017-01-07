@@ -28,7 +28,7 @@ class NoteToolbarComponent extends Component {
     let { tags } = this.state;
     let removed = null;
     if (tag) {
-      removed = tags.splice(tags.indexOf(tag) - 1);
+      removed = tags.splice(tags.indexOf(tag), 1);
     } else {
       removed = tags.pop();
     }
