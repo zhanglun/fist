@@ -21,9 +21,7 @@ export default class NoteList extends Component {
         .database()
         .ref('user-notes/' + currentUser.uid)
         .orderByChild('order_desc');
-      NoteRef.on('value', function (snapshot) {
-        console.log('value');
-        console.log(snapshot.val());
+      NoteRef.once('value', function (snapshot) {
       });
       NoteRef.on('child_added', (data) => {
         let {notes} = this.state;

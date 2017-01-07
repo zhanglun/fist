@@ -1,20 +1,8 @@
 import React, { Component } from 'react';
 // https://github.com/olahol/react-tagsinput/blob/master/src/index.js
 
-function renderInput(props) {
-  // let {onChange, value, ...other} = props;
-  return (
-    <input ref="input" type='text' {...props} />
-  )
-}
 
-function renderTags(tags) {
-  return tags.map((key) => {
-    return <span key={key}>{key}</span>;
-  })
-}
-
-export default class NoteToolbarComponent extends Component {
+class NoteToolbarComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,17 +10,7 @@ export default class NoteToolbarComponent extends Component {
     }
   }
 
-  handleKeyDown(event) {
-    if (!event.target.value && event.keyCode == 8) {
-      this.removeTags();
-    }
-    if (event.keyCode == 13) {
-      let value = event.target.value;
-      this.addTags(value);
-    }
-  }
-
-  addTags(tag) {
+  _addTags(tag) {
     let { tags } =  this.state;
     let notExist = tags.every((key) => {
       return key != tag;
@@ -43,10 +21,10 @@ export default class NoteToolbarComponent extends Component {
     }
 
     this.refs.input.value = '';
-    this.props.onTagsChange(tags, tag);
+    this.props.onChange('add', tag, tags);
   }
 
-  removeTags(tag) {
+  _removeTags(tag) {
     let { tags } = this.state;
     let removed = null;
     if (tag) {
@@ -57,16 +35,52 @@ export default class NoteToolbarComponent extends Component {
     this.setState({
       tags,
     });
-    this.props.onTagsChange(tags, removed);
+    this.props.onChange('remove', removed, tags);
+  }
+
+  handleRemove(tag) {
+    this._removeTags(tag);
+  }
+
+  handleKeyDown(event) {
+    if (!event.target.value && event.keyCode == 8) {
+      this._removeTags();
+    }
+    if (event.keyCode == 13) {
+      let value = event.target.value;
+      this._addTags(value);
+    }
   }
 
 
-  render() {
+  renderInput(props) {
+    // let {onChange, value, ...other} = props;
+    return (
+      <input ref="input" type='text' {...props} />
+    )
+  }
+
+  renderTags(props) {
     let { tags } = this.state;
-    let inputComponent = renderInput({
-      onKeyDown: this.handleKeyDown.bind(this),
+    let {
+      onRemove, tagProps,
+    } = props;
+    return tags.map((key) => {
+      return <span key={key} className={tagProps.className}>{key}
+        <a className={tagProps.classNameRemove} onClick={(e) => onRemove(key)}>&times;</a>
+    </span>;
+    })
+  }
+
+  render() {
+    let { tagProps } = this.props;
+    let inputComponent = this.renderInput({
+      onKeyDown: this.handleKeyDown.bind(this)
     });
-    let tagsComponent = renderTags(tags);
+    let tagsComponent = this.renderTags({
+      onRemove: this.handleRemove.bind(this),
+      tagProps,
+    });
     return (
       <div className="note-toolbar">
         <div className="note-tags-container">
@@ -77,5 +91,15 @@ export default class NoteToolbarComponent extends Component {
     )
   }
 
-
 }
+NoteToolbarComponent.defaultProps = {
+  className: 'tagsinput',
+  focusedClassName: 'tagsinput--focused',
+  tagProps: { className: 'tagsinput-tag', classNameRemove: 'tagsinput-remove' },
+  inputProps: {
+    className: 'tagsinput-input',
+    placeholder: 'Add a tag'
+  },
+};
+
+export default NoteToolbarComponent

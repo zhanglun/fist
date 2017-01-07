@@ -52,7 +52,9 @@ export default class NoteDetailComponent extends Component {
     return (
       <div className="note-detail">
         <div className="note-detail-toolbar">
-          <NoteToolbarComponent tags={[123, 'CSS', '学习笔记']} onTagsChange={this.handleTagsChange.bind(this)}/>
+          <NoteToolbarComponent
+            tags={[123, 'CSS', '学习笔记']}
+            onChange={this.handleTagsChange.bind(this)}/>
         </div>
         <EditorComponent
           title={note.title}
