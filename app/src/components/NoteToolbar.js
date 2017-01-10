@@ -12,10 +12,15 @@ class NoteToolbarComponent extends Component {
 
   _addTags(tag) {
     let { tags } =  this.state;
+    let {maxTags} = this.props;
     let notExist = tags.every((key) => {
       return key != tag;
     });
-    if (notExist) {
+    let remainLimit = null;
+    if(maxTags >= 0) {
+      remainLimit = tags.length < maxTags;
+    }
+    if (notExist && remainLimit) {
       tags.push(tag);
       this.setState({ tags });
     }
@@ -46,7 +51,7 @@ class NoteToolbarComponent extends Component {
     if (!event.target.value && event.keyCode == 8) {
       this._removeTags();
     }
-    if (event.keyCode == 13) {
+    if (event.target.value && event.keyCode == 13) {
       let value = event.target.value;
       this._addTags(value);
     }

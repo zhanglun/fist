@@ -53,3 +53,14 @@ export function save(userid, note) {
   // let noteRef = firebase.database().ref('posts/' + note+ '/starCount');
 }
 
+
+/**
+ * 标签相关
+ * @param userid
+ * @param noteid
+ * @param tags
+ */
+
+
+export function addTags(userid, noteid, tags) {
+}
