@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-// Initialize Firebase
 let config = {
   apiKey: "AIzaSyCSCN_fEp4_7xrFDDFJeq7F8A2TMC0TOlc",
   authDomain: "scorching-heat-5565.firebaseapp.com",
@@ -11,6 +10,7 @@ let config = {
 firebase.initializeApp(config);
 
 import React, { Component } from 'react';
+import { ColorfulBarLoading } from './ui/Loading';
 
 import NoteDetailComponent from './NoteDetail';
 import NoteListComponent from './NoteList';
@@ -21,7 +21,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      isLoading: true,
       auth: false,
       currentNote: null,
       showNewNoteEditor: false,
@@ -32,13 +32,21 @@ export default class App extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         window.currentUser = user;
+        let NoteRef = firebase
+          .database()
+          .ref('user-notes/' + currentUser.uid)
+          .orderByChild('order_desc');
+        NoteRef.once('value', (snapshot) => {
+          this.setState({
+            isLoading: false,
+          });
+        });
         this.setState({
-          loading: false,
           auth: true,
         });
       } else {
         this.setState({
-          loading: false,
+          isLoading: false,
           auth: false,
         });
         console.log('not logged in');
@@ -75,7 +83,7 @@ export default class App extends Component {
     this.setState({ currentNote: note });
   }
 
-  removeNote(note) {
+  removeNote() {
     this.setState({
       currentNote: null,
       showNewNoteEditor: false,
@@ -96,16 +104,18 @@ export default class App extends Component {
 
   render() {
     let {
-      loading,
+      isLoading,
       auth,
     } = this.state;
-    if (loading) {
+    if (isLoading) {
       return (
         <div className="app">
-          <h2>Loading...</h2>
+          <div className="app-loading">
+            <ColorfulBarLoading text="加载中"/>
+          </div>
         </div>
       )
-    } else if (!loading && !auth) {
+    } else if (!isLoading && !auth) {
       return (
         <div className="app">
           <div className="login-panel">

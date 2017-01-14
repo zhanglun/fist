@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
+import { ColorfulBarLoading } from './ui/Loading';
 import NoteViewComponent from './NoteViewItem';
 
 export default class NoteList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       notes: {}
     };
   }
@@ -21,12 +21,14 @@ export default class NoteList extends Component {
         .database()
         .ref('user-notes/' + currentUser.uid)
         .orderByChild('order_desc');
-      NoteRef.once('value', function (snapshot) {
+      NoteRef.once('value', (snapshot) => {
+        this.setState({
+          isLoading: false,
+        });
       });
       NoteRef.on('child_added', (data) => {
         let { notes } = this.state;
-        let newNote = Object.assign({}, data.val(), { key: data.ref.key });
-        notes[data.ref.key] = newNote;
+        notes[data.ref.key] = Object.assign({}, data.val(), { key: data.ref.key });
         this.setState({ notes });
       });
       NoteRef.on('child_changed', (data) => {
@@ -72,8 +74,12 @@ export default class NoteList extends Component {
 
   renderNoteViews() {
     let result = [];
-    let { notes } = this.state;
-
+    let { notes, isLoading } = this.state;
+    if (isLoading) {
+      return (
+        <ColorfulBarLoading />
+      );
+    }
     for (var id in notes) {
       result.push(<NoteViewComponent
         key={id}
@@ -86,7 +92,6 @@ export default class NoteList extends Component {
   }
 
   render() {
-    let { notes } = this.state;
     return (
       <div className="sidebar-notes" ref="noteList">
         <div className="sidebar-notes-toolbar">
