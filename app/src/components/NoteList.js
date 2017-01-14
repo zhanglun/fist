@@ -102,7 +102,7 @@ export default class NoteList extends Component {
               placeholder="搜索笔记"
               className="sidebar-notes-searcher__text-input"/>
           </div>
-          <span className="icon-plus sidebar-notes-toolbar__addnote"
+          <span className="icon-pencil2 sidebar-notes-toolbar__addnote"
                 onClick={this.openNewNoteEditor.bind(this)}/>
         </div>
         <div className="sidebar-notesview">
