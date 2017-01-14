@@ -45,10 +45,10 @@ export function save(userid, note) {
     data.update_time = new Date();
     data.order_desc = -new Date();
 
-    update(userid, note.key, data);
+    return update(userid, note.key, data);
   } else {
     note.create_time = new Date();
-    add(userid, note);
+    return add(userid, note);
   }
   // let noteRef = firebase.database().ref('posts/' + note+ '/starCount');
 }
@@ -64,3 +64,5 @@ export function save(userid, note) {
 
 export function addTags(userid, noteid, tags) {
 }
+
+export default function(){};

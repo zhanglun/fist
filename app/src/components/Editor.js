@@ -52,12 +52,7 @@ export default class EditorComponent extends Component {
       if (this.props.type == 'new') {
         return false;
       }
-      if (this.editor.timer) {
-        clearTimeout(this.editor.timer);
-      }
-      this.editor.timer = setTimeout(() => {
-        this.save();
-      }, 2000);
+      this.autoSave()
     });
   }
 
@@ -82,7 +77,20 @@ export default class EditorComponent extends Component {
     onTitleChange(event.target.value);
     this.setState({
       title: event.target.value,
-    })
+    });
+    if (this.props.type == 'new') {
+      return false;
+    }
+    this.autoSave();
+  }
+
+  autoSave() {
+    if (this.editor.timer) {
+      clearTimeout(this.editor.timer);
+    }
+    this.editor.timer = setTimeout(() => {
+      this.save();
+    }, 1500);
   }
 
   save() {

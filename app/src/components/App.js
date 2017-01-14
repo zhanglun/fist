@@ -75,6 +75,13 @@ export default class App extends Component {
     this.setState({ currentNote: note });
   }
 
+  removeNote(note) {
+    this.setState({
+      currentNote: null,
+      showNewNoteEditor: false,
+    });
+  }
+
   openNewNoteEditor() {
     this.setState({
       showNewNoteEditor: true,
@@ -92,18 +99,6 @@ export default class App extends Component {
       loading,
       auth,
     } = this.state;
-    let styles = {
-      top: {
-        width: '100%',
-        height: 50,
-        borderBottom: '2px solid #f4f4f4',
-      },
-      container: {
-        display: 'flex',
-        height: '100%',
-        overflow: 'hidden',
-      }
-    };
     if (loading) {
       return (
         <div className="app">
@@ -115,25 +110,28 @@ export default class App extends Component {
         <div className="app">
           <div className="login-panel">
           <span className=" login-icon-button" onClick={this.signIn.bind(this)}>
-            <span className="icon-github" />
+            <span className="icon-github"/>
             <span className="login-icon-button-text">Github</span>
           </span>
           </div>
         </div>)
     } else {
       return (
-      <div className="app">
-        <NewNoteComponent
-          isOpen={this.state.showNewNoteEditor}
-          onClose={this.handleCloseNewNote.bind(this)}
-        />
-        <NoteListComponent
-          onSelectNote={this.selectNote.bind(this)} key={'list'}
-          onOpenNewNoteEditor={this.openNewNoteEditor.bind(this)}
-           />
+        <div className="app">
+          <NewNoteComponent
+            isOpen={this.state.showNewNoteEditor}
+            onClose={this.handleCloseNewNote.bind(this)}
+          />
+          <NoteListComponent
+            key={'list'}
+            onSelectNote={this.selectNote.bind(this)}
+            onRemoveNote={this.removeNote.bind(this)}
+            onOpenNewNoteEditor={this.openNewNoteEditor.bind(this)}
+          />
 
-        {this.state.currentNote && <NoteDetailComponent note={this.state.currentNote} key={'list2'} />}
-      </div>
+          {this.state.currentNote &&
+          <NoteDetailComponent note={this.state.currentNote} key={'list2'}/>}
+        </div>
       )
     }
   }

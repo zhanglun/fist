@@ -10,13 +10,13 @@ export default class NoteViewItem extends Component {
   }
 
   selectNote(e) {
-    let { note, onSelectNote } = this.props;
+    let { onSelectNote } = this.props;
     onSelectNote();
   }
 
   deleteNote(e) {
     console.log('TODO: remove note');
-    let { note } = this.props;
+    let { note, } = this.props;
     Note.remove(note.author_id, note);
     console.log(note);
     e.stopPropagation();
