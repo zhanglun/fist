@@ -3,10 +3,16 @@ var gulp = require('gulp');
 var ghPages = require('gulp-gh-pages');
 var babel = require("gulp-babel");
 var gutil = require('gulp-util');
+var del = require('del');
+
 var webpack = require('webpack');
 var WebpackDevServer = require("webpack-dev-server");
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var webpackConfig = require('./webpack.config.js');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 var ROOT_PATH = path.resolve(__dirname);
 var APP_PATH = path.resolve(ROOT_PATH, 'app');
@@ -14,45 +20,93 @@ var SRC_PATH = path.resolve(APP_PATH, 'src');
 var BUILD_PATH = path.resolve(APP_PATH, 'build');
 
 
-// 开发
+// develop
 var webpackConfigDev = Object.create(webpackConfig);
-webpackConfigDev.devtool = 'eval';
+webpackConfigDev.devtool = "source-map";
 webpackConfigDev.debug = true;
+webpackConfigDev.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
+webpackConfigDev.plugins.push(new ProgressBarPlugin({ clear: false }));
+
+// production
+var webpackConfigProduction = Object.create(webpackConfig);
+console.log(webpackConfigProduction);
+webpackConfigProduction.plugins = webpackConfigProduction.plugins.concat([
+  new ExtractTextPlugin('./style.bundle.css'),
+  // new CopyWebpackPlugin([{
+  //   from: SRC_PATH + '/vendor',
+  //   to: BUILD_PATH + '/vendor',
+  // }]),
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false,
+    },
+    output: {
+      comments: false,
+    },
+  }),
+  new CommonsChunkPlugin({
+    name: ['react'],
+    filename: './react.bundle.js',
+    minChunks: Infinity
+  }),
+]);
 
 var devCompiler = webpack(webpackConfigDev);
+var productionCompiler = webpack(webpackConfigProduction);
 
-// renderer process 的 webpack 编译
-gulp.task('webpack:build-dev', function () {
-  devCompiler.run(function (err, status) {
+// dev 的 webpack 编译
+gulp.task('webpack:dev', function() {
+  devCompiler.run(function(err, status) {
     if (err) {
-      throw new gutil.PluginError('webpack:build-dev', err);
+      throw new gutil.PluginError('webpack:dev', err);
     }
-    gutil.log('[webpack:build-dev]', status.toString({
+    gutil.log('[webpack:dev]', status.toString({
       colors: true
     }));
   });
 });
 
-gulp.task('watch', ['webpack:build-dev'], function () {
-  gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:build-dev']);
+gulp.task('webpack:build', function() {
+  productionCompiler.run(function(err, status) {
+    if (err) {
+      throw new gutil.PluginError('webpack:build', err);
+    }
+    // gutil.log('[webpack:build]', status.toString({
+    //   colors: true
+    // }));
+  });
 });
 
-gulp.task('devserver', ['copy:lib'], function () {
-  var serverConfig = Object.create(webpackConfig);
-  serverConfig.devtool = "source-map";
-  serverConfig.debug = true;
-  serverConfig.entry.app.unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
-  serverConfig.plugins.push(new ProgressBarPlugin({ clear: false }));
-  var compiler = webpack(serverConfig);
-  var server = new WebpackDevServer(compiler, {
+gulp.task('watch', ['webpack:dev'], function() {
+  gulp.watch([SRC_PATH + '/**/*.{html,js,less,css}'], ['webpack:dev']);
+});
+
+// 开发环境 启动 webpack dev server
+gulp.task('server', ['clean', 'copy:lib'], function() {
+  var server = new WebpackDevServer(devCompiler, {
     hot: true,
     inline: true,
     port: 5000,
     color: true,
-    stats: { colors: true },
+    stats: {
+      colors: true,
+      hash: true,
+      version: true,
+      timings: true,
+      assets: false,
+      chunks: false,
+      modules: false,
+      reasons: false,
+      children: false,
+      source: false,
+      errors: true,
+      errorDetails: true,
+      warnings: true,
+      publicPath: false
+    },
     'contentBase': './app/build'
   });
-  server.listen(5000, function (err, status) {
+  server.listen(5000, function(err, status) {
     if (err) {
       throw new gutil.PluginError("webpack-dev-server", err);
     }
@@ -60,17 +114,21 @@ gulp.task('devserver', ['copy:lib'], function () {
   });
 });
 
-gulp.task('copy:lib', function () {
-  return gulp.src([SRC_PATH + '/lib/**/*.{js,swf}'], { base: SRC_PATH + '/lib' })
+gulp.task('clean', function() {
+  gutil.log('clean build path...');
+  return del([BUILD_PATH]);
+});
+
+gulp.task('copy:lib', function() {
+  gutil.log('copy lib...');
+  return gulp
+    .src([SRC_PATH + '/lib/**/*.{js,swf}'], { base: SRC_PATH + '/lib' })
     .pipe(gulp.dest(BUILD_PATH + '/lib/'));
 });
 
-gulp.task('dev', ['watch']);
+gulp.task('build', ['clean', 'copy:lib', 'webpack:build']);
 
-
-gulp.task('build', ['copy:lib', 'webpack:build-dev']);
-
-gulp.task('deploy', ['build'], function () {
+gulp.task('deploy', function() {
   return gulp.src('./app/build/**/*')
     .pipe(ghPages({
       force: true,
