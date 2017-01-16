@@ -71,7 +71,6 @@ var baseConfig = {
       template: SRC_PATH + '/index.html',
       filename: BUILD_PATH + '/index.html',
     }),
-    new webpack.HotModuleReplacementPlugin(),
   ],
 };
 
