@@ -1,5 +1,6 @@
 var path = require('path');
 var _ = require('lodash');
+var argv = require('yargs').argv;
 var gulp = require('gulp');
 var ghPages = require('gulp-gh-pages');
 var babel = require("gulp-babel");
@@ -21,7 +22,6 @@ var SRC_PATH = path.resolve(APP_PATH, 'src');
 var BUILD_PATH = path.resolve(APP_PATH, 'build');
 
 // develop
-var webpackConfigDev = Object.create(webpackConfig);
 var webpackConfigDev = _.cloneDeep(webpackConfig);
 webpackConfigDev.devtool = "source-map";
 webpackConfigDev.debug = true;
@@ -32,12 +32,13 @@ webpackConfigDev
 webpackConfigDev.plugins = webpackConfigDev
   .plugins
   .concat([
+    new ExtractTextPlugin('./style.bundle.css'),
     new webpack.HotModuleReplacementPlugin(),
     new ProgressBarPlugin({clear: false})
   ]);
 
 // production
-var webpackConfigProduction = Object.create(webpackConfig);
+console.log(argv);
 var webpackConfigProduction = _.cloneDeep(webpackConfig);
 console.log(webpackConfigProduction);
 webpackConfigProduction.plugins = webpackConfigProduction

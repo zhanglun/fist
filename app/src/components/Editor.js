@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SimpleMDE from 'simplemde';
 import 'simplemde/dist/simplemde.min.css';
+import classNames from 'classnames';
 import * as Note from '../helper/db/note';
 
 
@@ -11,6 +12,7 @@ export default class EditorComponent extends Component {
       title: props.title,
       content: props.content,
       id: props.id,
+      isSaving: false,
     };
   }
 
@@ -96,8 +98,15 @@ export default class EditorComponent extends Component {
   save() {
     let { onSave } = this.props;
     let { title, content } = this.state;
+    this.setState({
+      isSaving: true,
+    });
     content = this.editor.value();
-    onSave({ title, content });
+    onSave({ title, content }, () => {
+      this.setState({
+        isSaving: false,
+      })
+    });
   }
 
   renderButtons() {
@@ -112,7 +121,7 @@ export default class EditorComponent extends Component {
         result = <button
           className="button button-action button-rounded button-small"
           onClick={this.save.bind(this)}>
-          完成
+          保存
         </button>;
       } else {
         result = <button
@@ -124,17 +133,48 @@ export default class EditorComponent extends Component {
     return result;
   }
 
-  render() {
-    return (
-      <div className="note-editor">
-        <div className="note-editor-header">
-          <input
-            className="note-editor-input__title"
-            type="text"
-            value={this.state.title}
-            onChange={this.handleTitleChange.bind(this)}/>
+  renderEditorHeader() {
+    let { type } = this.props;
+    let { isSaving, } = this.state;
+    let headerStatusClassNames = classNames('editor-header-status', { 'isSaving': isSaving });
+    console.log(headerStatusClassNames);
+    if (type == 'new') {
+      return (
+        <div className="editor-header">
+          <div className="editor-title-container">
+            <input
+              className="editor-title-input"
+              type="text"
+              value={this.state.title}
+              onChange={this.handleTitleChange.bind(this)}/>
+          </div>
           {this.renderButtons()}
         </div>
+      )
+    } else {
+      return (
+        <div className="editor-header">
+          <div className="editor-title-container">
+            <input
+              className="editor-title-input"
+              type="text"
+              value={this.state.title}
+              onChange={this.handleTitleChange.bind(this)}/>
+          </div>
+          {isSaving && <span className={headerStatusClassNames}>
+            <i className="icon-spinner9"/>
+            保存中...
+          </span>}
+          {this.renderButtons()}
+        </div>
+      )
+    }
+  }
+
+  render() {
+    return (
+      <div className="editor">
+        {this.renderEditorHeader()}
         <textarea />
       </div>
     )

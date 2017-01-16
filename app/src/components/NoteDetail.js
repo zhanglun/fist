@@ -35,7 +35,7 @@ export default class NoteDetailComponent extends Component {
     this.setState({ note });
   }
 
-  save(data) {
+  save(data, cb) {
     let { note } = this.props;
     note.title = data.title;
     note.content = data.content;
@@ -43,8 +43,9 @@ export default class NoteDetailComponent extends Component {
     console.log('saving');
     Note.save(window.currentUser.uid, note)
       .then(() => {
-        console.log(arguments);
-        console.log('saved');
+        if(Object.prototype.toString.call(cb) === '[object Function]') {
+          cb();
+        }
       });
   }
 
