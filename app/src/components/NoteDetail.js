@@ -69,6 +69,7 @@ export default class NoteDetailComponent extends Component {
           title={note.title}
           content={note.content}
           id={note.key}
+          key={note.key}
           onSave={this
             .save
             .bind(this)}

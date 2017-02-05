@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SimpleMDE from 'simplemde';
 import 'simplemde/dist/simplemde.min.css';
 import classNames from 'classnames';
 import * as Note from '../helper/db/note';
@@ -21,48 +20,13 @@ export default class EditorComponent extends Component {
   }
 
   componentDidMount() {
-
-    let dom = this.refs.editor;
-    this.editor = new SimpleMDE({
-      // element: dom,
-      hideIcons: ["guide", "heading"],
-      autofocus: false,
-      indentWithTabs: false,
-      initialValue: this.state.content,
-      toolbar: false,
-      insertTexts: {
-        horizontalRule: ["", "\n\n-----\n\n"],
-        image: ["![](http://", ")"],
-        link: ["[", "](http://)"],
-        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
-      },
-      placeholder: "Type here...",
-      shortcuts: {
-        drawTable: "Cmd-Alt-T"
-      },
-      showIcons: ["code", "table"],
-      spellChecker: false,
-      styleSelectedText: false,
-      tabSize: 2,
-      toolbarTips: false,
-      status: false,
-    });
-    this.editor.codemirror.on("change", () => {
-      this.setState({
-        content: this.editor.value(),
-      });
-      if (this.props.type == 'new') {
-        return false;
-      }
-      this.autoSave()
-    });
+    this.editor = this.refs.textarea;
   }
 
   componentWillReceiveProps(nextprops) {
     let { title, content, id } = nextprops;
     if (content !== this.state.content && id !== this.state.id) {
       this.setState({ content, id, });
-      this.editor.value(content);
     }
     if (title !== this.state.title && id !== this.state.id) {
       this.setState({ title, });
@@ -86,6 +50,18 @@ export default class EditorComponent extends Component {
     this.autoSave();
   }
 
+  handleContentChange(event) {
+    // let { onContentChange } = this.props;
+    // onContentChange(event.target.value);
+    this.setState({
+      content: event.target.value,
+    });
+    if (this.props.type == 'new') {
+      return false;
+    }
+    this.autoSave();
+  }
+
   autoSave() {
     if (this.editor.timer) {
       clearTimeout(this.editor.timer);
@@ -101,7 +77,6 @@ export default class EditorComponent extends Component {
     this.setState({
       isSaving: true,
     });
-    content = this.editor.value();
     onSave({ title, content }, () => {
       this.setState({
         isSaving: false,
@@ -175,8 +150,17 @@ export default class EditorComponent extends Component {
     return (
       <div className="editor">
         {this.renderEditorHeader()}
-        <textarea />
+        <textarea
+          className="editor-textarea"
+          ref="textarea"
+          value={this.state.content}
+          onChange={this.handleContentChange.bind(this)}
+          onKeyUp={this.handleContentChange.bind(this)}/>
       </div>
     )
   }
 }
+
+EditorComponent.defaultProps = {
+  timer: null,
+};

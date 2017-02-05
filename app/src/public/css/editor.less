@@ -63,15 +63,18 @@
     //  resize: none;
     //}
   }
-  .CodeMirror {
+  &-textarea {
+    width: 100%;
+    height: 100%;
     border: none;
-    flex: 1;
+    resize: none;
+    outline: none;
+    padding: 14px;
+    font-size: 16px;
+    box-sizing: border-box;
   }
 }
 
-.note-editor-header {
-  display: flex;
-}
 
 @keyframes rotate-loading {
   0% {
