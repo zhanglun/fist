@@ -92,7 +92,7 @@ export default class EditorComponent extends Component {
     if (!showButton) {
       return false;
     } else {
-      if (this.editor && this.editor.value()) {
+      if (this.editor && this.editor.value) {
         result = <button
           className="button button-action button-rounded button-small"
           onClick={this.save.bind(this)}>
