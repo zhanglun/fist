@@ -86,21 +86,25 @@ export default class EditorComponent extends Component {
 
   renderButtons() {
     let {
-      showButton
+      showButton,
+      buttonStyles,
     } = this.props;
     let result = null;
+
     if (!showButton) {
       return false;
     } else {
       if (this.editor && this.editor.value) {
         result = <button
           className="button button-action button-rounded button-small"
+          style={buttonStyles}
           onClick={this.save.bind(this)}>
           保存
         </button>;
       } else {
         result = <button
           className="button button-action button-rounded button-small"
+          style={buttonStyles}
           onClick={this.onClose.bind(this)}>取消
         </button>
       }
@@ -112,48 +116,38 @@ export default class EditorComponent extends Component {
     let { type } = this.props;
     let { isSaving, } = this.state;
     let headerStatusClassNames = classNames('editor-header-status', { 'isSaving': isSaving });
-    console.log(headerStatusClassNames);
-    if (type == 'new') {
-      return (
-        <div className="editor-header">
-          <div className="editor-title-container">
-            <input
-              className="editor-title-input"
-              type="text"
-              value={this.state.title}
-              onChange={this.handleTitleChange.bind(this)}/>
-          </div>
-          {this.renderButtons()}
+    return (
+      <div className="editor-header">
+        <div className="editor-title-container">
+          <input
+            className="editor-title-input"
+            type="text"
+            value={this.state.title}
+            placeholder="取个什么标题好呢?"
+            onChange={this.handleTitleChange.bind(this)}/>
         </div>
-      )
-    } else {
-      return (
-        <div className="editor-header">
-          <div className="editor-title-container">
-            <input
-              className="editor-title-input"
-              type="text"
-              value={this.state.title}
-              onChange={this.handleTitleChange.bind(this)}/>
-          </div>
-          {isSaving && <span className={headerStatusClassNames}>
+        {isSaving && type == 'new' && <span className={headerStatusClassNames}>
             <i className="icon-spinner9"/>
             保存中...
           </span>}
-          {this.renderButtons()}
-        </div>
-      )
-    }
+        {this.renderButtons()}
+      </div>
+    )
   }
 
   render() {
+    let { className } = this.props;
+    let editorClassName = classNames({
+      editor: true,
+    }, className);
     return (
-      <div className="editor">
+      <div className={editorClassName}>
         {this.renderEditorHeader()}
         <textarea
           className="editor-textarea"
           ref="textarea"
           value={this.state.content}
+          placeholder="直接开始输入吧!"
           onChange={this.handleContentChange.bind(this)}
           onKeyUp={this.handleContentChange.bind(this)}/>
       </div>

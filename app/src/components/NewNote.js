@@ -59,23 +59,32 @@ export default class NewNoteComponent extends Component {
 
   render() {
     let { note, isOpen } = this.state;
+    let buttonStyle= {
+      position: 'absolute',
+      right: 10,
+      top: -40,
+    };
     return (
       <div>
-        {isOpen && <div className="newnote-container">
-          <div className="note-detail-toolbar">
-            <NoteToolbarComponent
-              tags={[123, 'CSS', '学习笔记']}
-              maxTags={8}
-              onChange={this.handleTagsChange.bind(this)}/>
+        {isOpen && <div className="newnote-layer">
+          <div className="newnote-container">
+            <div className="newnote-toolbar">
+              <NoteToolbarComponent
+                tags={[123, 'CSS', '学习笔记']}
+                maxTags={8}
+                onChange={this.handleTagsChange.bind(this)}/>
+            </div>
+            <EditorComponent
+              title={note.title}
+              className="newnote-editor"
+              content={note.content}
+              onSave={this.save.bind(this)}
+              showButton={true}
+              buttonStyles={buttonStyle}
+              type={'new'}
+              onClose={this.handleClose.bind(this)}
+              onTitleChange={this.handleTitleChange.bind(this)}/>
           </div>
-          <EditorComponent
-            title={note.title}
-            content={note.content}
-            onSave={this.save.bind(this)}
-            showButton={true}
-            type={'new'}
-            onClose={this.handleClose.bind(this)}
-            onTitleChange={this.handleTitleChange.bind(this)}/>
         </div>}
       </div>
     )
