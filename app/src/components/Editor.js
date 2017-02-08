@@ -68,7 +68,7 @@ export default class EditorComponent extends Component {
     }
     this.editor.timer = setTimeout(() => {
       this.save();
-    }, 1500);
+    }, 800);
   }
 
   save() {
