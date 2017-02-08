@@ -102,6 +102,15 @@ export default class App extends Component {
     });
   }
 
+  renderWelcomePlaceholder() {
+    return (
+      <div className="app-welcome">
+        <div className="app-welcome-placeholder-image">
+        </div>
+      </div>
+    );
+  }
+
   render() {
     let {
       isLoading,
@@ -141,6 +150,8 @@ export default class App extends Component {
 
           {this.state.currentNote &&
           <NoteDetailComponent note={this.state.currentNote} key={'list2'}/>}
+          {!this.state.currentNote &&
+          this.renderWelcomePlaceholder()}
         </div>
       )
     }
