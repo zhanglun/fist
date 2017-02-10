@@ -126,7 +126,7 @@ export default class EditorComponent extends Component {
             placeholder="取个什么标题好呢?"
             onChange={this.handleTitleChange.bind(this)}/>
         </div>
-        {isSaving && type == 'new' && <span className={headerStatusClassNames}>
+        {isSaving && type !== 'new' && <span className={headerStatusClassNames}>
             <i className="icon-spinner9"/>
             保存中...
           </span>}
