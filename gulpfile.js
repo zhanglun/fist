@@ -34,19 +34,17 @@ webpackConfigDev.plugins = webpackConfigDev
   .concat([
     new ExtractTextPlugin('./style.bundle.css'),
     new webpack.HotModuleReplacementPlugin(),
-    new ProgressBarPlugin({clear: false})
+    new ProgressBarPlugin({ clear: false })
   ]);
 
 // production
-console.log(argv);
 var webpackConfigProduction = _.cloneDeep(webpackConfig);
-console.log(webpackConfigProduction);
 webpackConfigProduction.plugins = webpackConfigProduction
   .plugins
   .concat([
     new ExtractTextPlugin('./style.bundle.css'),
-    // new CopyWebpackPlugin([{   from: SRC_PATH + '/vendor',   to: BUILD_PATH +
-    // '/vendor', }]),
+    new CopyWebpackPlugin([{   from: SRC_PATH + '/vendor',   to: BUILD_PATH +
+    '/vendor', }]),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production')
@@ -55,14 +53,14 @@ webpackConfigProduction.plugins = webpackConfigProduction
     new webpack
       .optimize
       .UglifyJsPlugin({
-        compress: {
-          warnings: false
-        },
-        output: {
-          comments: false
-        }
-      }),
-    new CommonsChunkPlugin({name: ['react'], filename: './react.bundle.js', minChunks: Infinity})
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    }),
+    new CommonsChunkPlugin({ name: ['react'], filename: './react.bundle.js', minChunks: Infinity })
   ]);
 
 var devCompiler = webpack(webpackConfigDev);
@@ -75,17 +73,18 @@ gulp.task('webpack:dev', function () {
       if (err) {
         throw new gutil.PluginError('webpack:dev', err);
       }
-      gutil.log('[webpack:dev]', status.toString({colors: true}));
+      gutil.log('[webpack:dev]', status.toString({ colors: true }));
     });
 });
 
-gulp.task('webpack:build', function () {
+gulp.task('webpack:build', ['clean'], function (cb) {
   productionCompiler
     .run(function (err, status) {
       if (err) {
         throw new gutil.PluginError('webpack:build', err);
       }
     });
+  cb();
 });
 
 gulp.task('watch', ['webpack:dev'], function () {
@@ -127,22 +126,25 @@ gulp.task('server', [
   });
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', function (cb) {
   gutil.log('clean build path...');
-  return del([BUILD_PATH]);
+  del([BUILD_PATH]);
+  cb();
 });
 
-gulp.task('copy:lib', function () {
+
+gulp.task('copy:lib', ['clean'], function () {
   gutil.log('copy lib...');
   return gulp.src([SRC_PATH + '/lib/**/*.{js,swf}'], {
     base: SRC_PATH + '/lib'
   }).pipe(gulp.dest(BUILD_PATH + '/lib/'));
 });
 
-gulp.task('build', ['clean', 'copy:lib', 'webpack:build']);
+// 线上版本的构建
+gulp.task('build', ['webpack:build', 'copy:lib']);
 
 gulp.task('deploy', function () {
   return gulp
     .src('./app/build/**/*')
-    .pipe(ghPages({force: true}))
+    .pipe(ghPages({ force: true }))
 });
