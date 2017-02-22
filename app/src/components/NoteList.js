@@ -19,8 +19,8 @@ export default class NoteList extends Component {
     if (currentUser) {
       let NoteRef = firebase
         .database()
-        .ref('user-notes/' + currentUser.uid);
-        // .orderByChild('order_desc');
+        .ref('user-notes/' + currentUser.uid)
+        .orderByChild('order_desc');
 
       NoteRef.once('value', (snapshot) => {
         this.setState({
@@ -34,7 +34,16 @@ export default class NoteList extends Component {
         // notes[index] = Object.assign({}, value, { key: data.ref.key });
         value = Object.assign({}, value, { key: data.ref.key });
         notes = [].concat(notes);
-        notes.unshift(value);
+        notes.push(value);
+        notes.sort((a, b) => {
+          if (a.order_desc > b.order_desc) {
+            return 1;
+          } else if (a.order_desc < b.order_desc) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
         this.setState({ notes });
       });
       // NoteRef.on('child_changed', (data) => {

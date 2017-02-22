@@ -115,6 +115,7 @@ export default class EditorComponent extends Component {
   renderEditorHeader() {
     let { type } = this.props;
     let { isSaving, } = this.state;
+    let showSavingLoading = isSaving && type != 'new';
     let headerStatusClassNames = classNames('editor-header-status', { 'isSaving': isSaving });
     return (
       <div className="editor-header">
@@ -126,7 +127,7 @@ export default class EditorComponent extends Component {
             placeholder="取个什么标题好呢?"
             onChange={this.handleTitleChange.bind(this)}/>
         </div>
-        {isSaving && type !== 'new' && <span className={headerStatusClassNames}>
+        {showSavingLoading && <span className={headerStatusClassNames}>
             <i className="icon-spinner9"/>
             保存中...
           </span>}
