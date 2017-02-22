@@ -7,8 +7,8 @@ export default class NoteList extends Component {
     super(props);
     this.state = {
       isLoading: true,
-      notes: {}
-    };
+      notes: [],
+    }
   }
 
   componentWillMount() {
@@ -19,8 +19,9 @@ export default class NoteList extends Component {
     if (currentUser) {
       let NoteRef = firebase
         .database()
-        .ref('user-notes/' + currentUser.uid)
-        .orderByChild('order_desc');
+        .ref('user-notes/' + currentUser.uid);
+        // .orderByChild('order_desc');
+
       NoteRef.once('value', (snapshot) => {
         this.setState({
           isLoading: false,
@@ -28,33 +29,39 @@ export default class NoteList extends Component {
       });
       NoteRef.on('child_added', (data) => {
         let { notes } = this.state;
-        notes[data.ref.key] = Object.assign({}, data.val(), { key: data.ref.key });
+        let value = data.val();
+        // let index = value.order_desc;
+        // notes[index] = Object.assign({}, value, { key: data.ref.key });
+        value = Object.assign({}, value, { key: data.ref.key });
+        notes = [].concat(notes);
+        notes.unshift(value);
         this.setState({ notes });
       });
-      NoteRef.on('child_changed', (data) => {
-        let { notes } = this.state;
-        let key = data.ref.key;
-        if (notes[key]) {
-          notes[key] = Object.assign({}, data.val(), { key: data.ref.key });
-          this.setState({ notes });
-        }
-        console.log('child_changed', data);
-      });
-      NoteRef.on('child_removed', (data) => {
-        let notes = Object.assign({}, this.state.notes);
-        let key = data.ref.key;
-        if (notes[key]) {
-          this.removeNote(notes[key]);
-          delete notes[key];
-          this.setState({ notes });
-        }
-      });
+      // NoteRef.on('child_changed', (data) => {
+      //   let { notes } = this.state;
+      //   let value = data.val();
+      //   // let index = value.order_desc;
+      //   // if (notes[index]) {
+      //   //   notes[index] = Object.assign({}, value, { key: data.ref.key });
+      //
+      //   this.setState({ notes });
+      //   // }
+      //   console.log('child_changed', data);
+      // });
+      // NoteRef.on('child_removed', (data) => {
+      //   let notes = Object.assign({}, this.state.notes);
+      //   let value = data.val();
+      //   let index = value.order_desc;
+      //   if (notes[index]) {
+      //     this.removeNote(notes[index]);
+      //     delete notes[index];
+      //     this.setState({ notes });
+      //   }
+      // });
     }
   }
 
   componentDidMount() {
-    console.log(this.refs.noteList);
-
   }
 
   selectNote(note) {
@@ -73,22 +80,30 @@ export default class NoteList extends Component {
   }
 
   renderNoteViews() {
-    let result = [];
+    // let result = [];
     let { notes, isLoading } = this.state;
     if (isLoading) {
       return (
         <ColorfulBarLoading />
       );
     }
-    for (var id in notes) {
-      result.push(<NoteViewComponent
-        key={id}
-        note={notes[id]}
-        onSelectNote={this.selectNote.bind(this, notes[id])}
-        onRemoveNote={this.removeNote.bind(this, notes[id])}
-      />);
-    }
-    return result;
+    return notes.map((note) => {
+      return <NoteViewComponent
+        key={note.key}
+        note={note}
+        onSelectNote={this.selectNote.bind(this, note)}
+        onRemoveNote={this.removeNote.bind(this, note)}
+      />
+    });
+    // for (var id in notes) {
+    //   result.push(<NoteViewComponent
+    //     key={id}
+    //     note={notes[id]}
+    //     onSelectNote={this.selectNote.bind(this, notes[id])}
+    //     onRemoveNote={this.removeNote.bind(this, notes[id])}
+    //   />);
+    // }
+    // return result;
   }
 
   render() {
