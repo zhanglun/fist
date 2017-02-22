@@ -32,7 +32,7 @@ webpackConfigDev
 webpackConfigDev.plugins = webpackConfigDev
   .plugins
   .concat([
-    new ExtractTextPlugin('./style.bundle.css'),
+    // new ExtractTextPlugin('./style.bundle.css'),
     new webpack.HotModuleReplacementPlugin(),
     new ProgressBarPlugin({ clear: false })
   ]);
@@ -43,8 +43,10 @@ webpackConfigProduction.plugins = webpackConfigProduction
   .plugins
   .concat([
     new ExtractTextPlugin('./style.bundle.css'),
-    new CopyWebpackPlugin([{   from: SRC_PATH + '/vendor',   to: BUILD_PATH +
-    '/vendor', }]),
+    // new CopyWebpackPlugin([{
+    //   from: SRC_PATH + '/vendor', to: BUILD_PATH +
+    //   '/vendor',
+    // }]),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production')
