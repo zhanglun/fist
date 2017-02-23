@@ -1,10 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-// var CopyWebpackPlugin = require('copy-webpack-plugin');
-var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 // 定义了一些文件夹的路径
 var ROOT_PATH = path.resolve(__dirname);
@@ -15,9 +12,9 @@ var BUILD_PATH = path.resolve(APP_PATH, 'build');
 /**
  * 基本配置
  */
-var baseConfig = {
+var config = {
   entry: {
-    'app': [SRC_PATH + '/index.js'],
+    'app': ["webpack/hot/dev-server", "webpack-dev-server/client?http://localhost:5000/", SRC_PATH + '/index.js'],
   },
   output: {
     path: BUILD_PATH,
@@ -37,11 +34,11 @@ var baseConfig = {
       include: [APP_PATH],
     }, {
       test: /.less$/,
-      loader: ExtractTextPlugin.extract(['css', 'less']),
+      loaders: ['css-loader', 'less-loader'],
       include: [SRC_PATH],
     }, {
       test: /.css$/,
-      loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+      loaders: ["style-loader", "css-loader"],
     }, {
       test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
       loader: 'file-loader?name=fonts/[hash].[ext]',
@@ -50,21 +47,29 @@ var baseConfig = {
       loaders: [
         'url?limit=10000&&hash=sha512&digest=hex&name=images/[hash].[ext]'
       ],
-    }, ],
+    },],
   },
+  devtool: 'source-map',
+  debug: true,
   resolve: {
     root: path.resolve(__dirname),
-    alias: {
-    },
+    alias: {},
     extensions: ['', '.js', '.jsx', '.css']
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('dev')
+      }
+    }),
+    new ProgressBarPlugin({ clear: false }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       "window.jQuery": 'jquery',
       firebase: 'firebase',
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: SRC_PATH + '/index.html',
       filename: BUILD_PATH + '/index.html',
@@ -72,32 +77,4 @@ var baseConfig = {
   ],
 };
 
-
-/**
- * 生产环境的配置
- * @type {[type]}
- */
-var productionConfig = Object.assign({}, baseConfig);
-productionConfig.plugins = productionConfig.plugins.concat([
-  new ExtractTextPlugin('style.bundle.css'),
-  new CommonsChunkPlugin({
-    name: ['react'],
-    filename: 'react.bundle.js',
-    minChunks: Infinity
-  }),
-]);
-
-
-
-/**
- * 输出
- */
-
-
-if (argv.dev) {
-  module.exports = baseConfig;
-} else if (argv.production) {
-  module.exports = productionConfig;
-} else {
-  module.exports = baseConfig;
-}
+module.exports = config;

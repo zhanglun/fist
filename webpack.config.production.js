@@ -4,6 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 // var CopyWebpackPlugin = require('copy-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 
 // 定义了一些文件夹的路径
@@ -15,7 +16,7 @@ var BUILD_PATH = path.resolve(APP_PATH, 'build');
 /**
  * 基本配置
  */
-var baseConfig = {
+var productionConfig = {
   entry: {
     'app': [SRC_PATH + '/index.js'],
   },
@@ -50,15 +51,32 @@ var baseConfig = {
       loaders: [
         'url?limit=10000&&hash=sha512&digest=hex&name=images/[hash].[ext]'
       ],
-    }, ],
+    },],
   },
   resolve: {
     root: path.resolve(__dirname),
-    alias: {
-    },
+    alias: {},
     extensions: ['', '.js', '.jsx', '.css']
   },
   plugins: [
+    new ExtractTextPlugin('./style.bundle.css'),
+    new ProgressBarPlugin({ clear: false }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack
+      .optimize
+      .UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    }),
+    new CommonsChunkPlugin({ name: ['react'], filename: './react.bundle.js', minChunks: Infinity }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -72,32 +90,4 @@ var baseConfig = {
   ],
 };
 
-
-/**
- * 生产环境的配置
- * @type {[type]}
- */
-var productionConfig = Object.assign({}, baseConfig);
-productionConfig.plugins = productionConfig.plugins.concat([
-  new ExtractTextPlugin('style.bundle.css'),
-  new CommonsChunkPlugin({
-    name: ['react'],
-    filename: 'react.bundle.js',
-    minChunks: Infinity
-  }),
-]);
-
-
-
-/**
- * 输出
- */
-
-
-if (argv.dev) {
-  module.exports = baseConfig;
-} else if (argv.production) {
-  module.exports = productionConfig;
-} else {
-  module.exports = baseConfig;
-}
+module.exports = productionConfig;

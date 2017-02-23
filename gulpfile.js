@@ -1,6 +1,5 @@
 var path = require('path');
 var _ = require('lodash');
-var argv = require('yargs').argv;
 var gulp = require('gulp');
 var ghPages = require('gulp-gh-pages');
 var babel = require("gulp-babel");
@@ -9,12 +8,8 @@ var del = require('del');
 
 var webpack = require('webpack');
 var WebpackDevServer = require("webpack-dev-server");
-var ProgressBarPlugin = require('progress-bar-webpack-plugin');
-var webpackConfig = require('./webpack.config.js');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+var webpackConfigDev = require('./webpack.config.dev.js');
+var webpackConfigProd = require('./webpack.config.production.js');
 
 var ROOT_PATH = path.resolve(__dirname);
 var APP_PATH = path.resolve(ROOT_PATH, 'app');
@@ -22,51 +17,10 @@ var SRC_PATH = path.resolve(APP_PATH, 'src');
 var BUILD_PATH = path.resolve(APP_PATH, 'build');
 
 // develop
-var webpackConfigDev = _.cloneDeep(webpackConfig);
-webpackConfigDev.devtool = "source-map";
-webpackConfigDev.debug = true;
-webpackConfigDev
-  .entry
-  .app
-  .unshift("webpack-dev-server/client?http://localhost:5000/", "webpack/hot/dev-server");
-webpackConfigDev.plugins = webpackConfigDev
-  .plugins
-  .concat([
-    // new ExtractTextPlugin('./style.bundle.css'),
-    new webpack.HotModuleReplacementPlugin(),
-    new ProgressBarPlugin({ clear: false })
-  ]);
+var devCompiler = webpack(webpackConfigDev);
 
 // production
-var webpackConfigProduction = _.cloneDeep(webpackConfig);
-webpackConfigProduction.plugins = webpackConfigProduction
-  .plugins
-  .concat([
-    new ExtractTextPlugin('./style.bundle.css'),
-    // new CopyWebpackPlugin([{
-    //   from: SRC_PATH + '/vendor', to: BUILD_PATH +
-    //   '/vendor',
-    // }]),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new webpack
-      .optimize
-      .UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      output: {
-        comments: false
-      }
-    }),
-    new CommonsChunkPlugin({ name: ['react'], filename: './react.bundle.js', minChunks: Infinity })
-  ]);
-
-var devCompiler = webpack(webpackConfigDev);
-var productionCompiler = webpack(webpackConfigProduction);
+var productionCompiler = webpack(webpackConfigProd);
 
 // dev 的 webpack 编译
 gulp.task('webpack:dev', function () {

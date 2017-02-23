@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server -d --watch --devtool --port 1000 --inline --hot --content-base ./app/build",
-    "build": "webpack --production",
-    "server": "gulp server --aaaa"
+    "build": "webpack --production"
   },
   "repository": {
     "type": "git",
