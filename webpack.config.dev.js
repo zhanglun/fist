@@ -34,7 +34,7 @@ var config = {
       include: [APP_PATH],
     }, {
       test: /.less$/,
-      loaders: ['css-loader', 'less-loader'],
+      loaders: ['style-loader', 'css-loader', 'less-loader'],
       include: [SRC_PATH],
     }, {
       test: /.css$/,
@@ -49,7 +49,7 @@ var config = {
       ],
     },],
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   debug: true,
   resolve: {
     root: path.resolve(__dirname),
